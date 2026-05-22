@@ -59,11 +59,14 @@ app.put('/api/babies/:id', (req, res) => {
 // ===== Records =====
 
 app.get('/api/babies/:babyId/records', (req, res) => {
-  const { limit = 100, offset = 0, date } = req.query;
+  const { limit = 200, offset = 0, date, date_from, date_to } = req.query;
   let query = 'SELECT * FROM records WHERE baby_id = ?';
   const params = [req.params.babyId];
 
-  if (date) {
+  if (date_from && date_to) {
+    query += " AND DATE(recorded_at, 'localtime') BETWEEN ? AND ?";
+    params.push(date_from, date_to);
+  } else if (date) {
     query += " AND DATE(recorded_at, 'localtime') = ?";
     params.push(date);
   }

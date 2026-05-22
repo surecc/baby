@@ -4,464 +4,279 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="theme-color" content="#ffffff">
-  <title>宝宝日记</title>
+  <title>宝宝日记 · Baby Log</title>
   <style>
     :root {
-      --pink: #F06292;
-      --pink-dark: #E91E8C;
-      --pink-light: #FCE4EC;
-      --pink-bg: #FFF5F8;
-      --blue: #64B5F6;
-      --blue-light: #E3F2FD;
-      --green: #81C784;
-      --green-light: #E8F5E9;
-      --purple: #BA68C8;
-      --purple-light: #F3E5F5;
-      --orange: #FFB74D;
-      --orange-light: #FFF3E0;
-      --teal: #4DD0E1;
-      --teal-light: #E0F7FA;
-      --bg: #FFF5F8;
-      --card: #FFFFFF;
-      --text: #1C1C1E;
-      --text2: #6B7280;
-      --border: #F0E8EC;
-      --shadow: 0 2px 12px rgba(240,98,146,0.10);
-      --shadow-lg: 0 8px 28px rgba(240,98,146,0.18);
-      --r: 16px;
-      --r-sm: 10px;
-      --nav: 60px;
+      --pink:#F06292; --pink-d:#E91E8C; --pink-l:#FCE4EC; --pink-bg:#FFF5F8;
+      --blue:#64B5F6; --blue-l:#E3F2FD;
+      --green:#81C784; --green-l:#E8F5E9;
+      --purple:#BA68C8; --purple-l:#F3E5F5;
+      --orange:#FFB74D; --orange-l:#FFF3E0;
+      --teal:#4DD0E1; --teal-l:#E0F7FA;
+      --indigo:#5C6BC0; --indigo-l:#E8EAF6;
+      --bg:#FFF5F8; --card:#fff; --text:#1C1C1E; --text2:#6B7280;
+      --border:#F0E8EC; --shadow:0 2px 12px rgba(240,98,146,.10);
+      --r:16px; --r-sm:10px; --nav:60px;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    html, body { height: 100%; overflow: hidden; background: var(--bg); }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Noto Sans SC', sans-serif;
-      color: var(--text);
-      max-width: 480px;
-      margin: 0 auto;
-      position: relative;
-    }
-    #app { height: 100%; display: flex; flex-direction: column; }
-    ::-webkit-scrollbar { display: none; }
-    * { scrollbar-width: none; }
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    html,body{height:100%;overflow:hidden;background:var(--bg)}
+    body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Noto Sans SC',sans-serif;color:var(--text);max-width:480px;margin:0 auto}
+    #app{height:100%;display:flex;flex-direction:column}
+    ::-webkit-scrollbar{display:none} *{scrollbar-width:none}
 
     /* ── Buttons ── */
-    .btn {
-      display: flex; align-items: center; justify-content: center; gap: 6px;
-      padding: 14px 20px; border-radius: var(--r-sm); border: none;
-      font-size: 15px; font-weight: 600; cursor: pointer;
-      transition: transform .12s, box-shadow .12s; width: 100%;
-    }
-    .btn:active { transform: scale(.97); }
-    .btn-primary {
-      background: linear-gradient(135deg, #F48FB1 0%, #EC407A 100%);
-      color: #fff; box-shadow: 0 4px 14px rgba(236,64,122,.38);
-    }
-    .btn-outline {
-      background: #fff; color: var(--text);
-      border: 1.5px solid var(--border);
-      box-shadow: 0 2px 6px rgba(0,0,0,.05);
-    }
-    .btn-ghost { background: transparent; color: var(--text2); width: auto; padding: 6px 10px; font-size: 14px; font-weight: 500; }
-    .btn-sm { padding: 9px 16px; font-size: 13px; border-radius: 8px; }
-    .btn-danger { background: #FFF0F0; color: #E53935; border: 1px solid #FFCDD2; }
+    .btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:14px 20px;border-radius:var(--r-sm);border:none;font-size:15px;font-weight:600;cursor:pointer;transition:transform .12s;width:100%}
+    .btn:active{transform:scale(.97)}
+    .btn-primary{background:linear-gradient(135deg,#F48FB1,#EC407A);color:#fff;box-shadow:0 4px 14px rgba(236,64,122,.38)}
+    .btn-outline{background:#fff;color:var(--text);border:1.5px solid var(--border);box-shadow:0 2px 6px rgba(0,0,0,.05)}
+    .btn-ghost{background:transparent;color:var(--text2);width:auto;padding:6px 10px;font-size:14px;font-weight:500}
+    .btn-sm{padding:9px 16px;font-size:13px;border-radius:8px}
 
     /* ── Form ── */
-    .form-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
-    .form-label { font-size: 12px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: .4px; }
-    .form-input {
-      padding: 12px 14px; border: 1.5px solid var(--border); border-radius: var(--r-sm);
-      font-size: 15px; font-family: inherit; background: #fff; color: var(--text);
-      transition: border-color .15s; width: 100%;
-    }
-    .form-input:focus { outline: none; border-color: var(--pink); }
-    .form-input::placeholder { color: #D0B8C0; }
-    textarea.form-input { resize: none; min-height: 80px; }
+    .form-group{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+    .form-label{font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.4px}
+    .form-input{padding:12px 14px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:15px;font-family:inherit;background:#fff;color:var(--text);transition:border-color .15s;width:100%}
+    .form-input:focus{outline:none;border-color:var(--pink)}
+    .form-input::placeholder{color:#D0B8C0}
+    textarea.form-input{resize:none;min-height:80px}
 
     /* Segmented */
-    .seg { display: flex; background: #F2E8EC; border-radius: 8px; padding: 3px; gap: 2px; }
-    .seg-btn {
-      flex: 1; padding: 8px 4px; border: none; border-radius: 6px; font-size: 13px;
-      font-weight: 500; cursor: pointer; background: transparent; color: var(--text2);
-      transition: all .15s; white-space: nowrap;
-    }
-    .seg-btn.active { background: #fff; color: var(--text); box-shadow: 0 1px 4px rgba(0,0,0,.12); }
+    .seg{display:flex;background:#F2E8EC;border-radius:8px;padding:3px;gap:2px}
+    .seg-btn{flex:1;padding:8px 4px;border:none;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;background:transparent;color:var(--text2);transition:all .15s;white-space:nowrap}
+    .seg-btn.active{background:#fff;color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.12)}
 
-    /* Stepper */
-    .stepper {
-      display: flex; align-items: center; background: #F2E8EC;
-      border-radius: var(--r-sm); padding: 4px; gap: 0;
-    }
-    .step-btn {
-      width: 38px; height: 38px; border: none; border-radius: 7px; background: #fff;
-      font-size: 20px; font-weight: 300; cursor: pointer; display: flex;
-      align-items: center; justify-content: center; flex-shrink: 0;
-      box-shadow: 0 1px 3px rgba(0,0,0,.08); color: var(--pink);
-    }
-    .step-btn:active { transform: scale(.93); }
-    .step-val { flex: 1; text-align: center; font-size: 20px; font-weight: 700; color: var(--text); }
-    .step-unit { font-size: 12px; color: var(--text2); padding-right: 6px; font-weight: 500; }
+    /* Number input with keyboard */
+    .num-group{display:flex;align-items:stretch;background:#F2E8EC;border-radius:var(--r-sm);overflow:hidden;height:48px}
+    .num-step{width:40px;border:none;background:#fff;font-size:22px;font-weight:300;cursor:pointer;color:var(--pink);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:background .12s}
+    .num-step:active{background:#FCE4EC}
+    .num-direct{flex:1;text-align:center;font-size:19px;font-weight:700;color:var(--text);background:#fff;border:none;border-left:2px solid #F2E8EC;border-right:2px solid #F2E8EC;padding:0 4px;outline:none;min-width:50px;-moz-appearance:textfield}
+    .num-direct::-webkit-inner-spin-button,.num-direct::-webkit-outer-spin-button{-webkit-appearance:none}
+    .num-unit{font-size:12px;color:var(--text2);background:#F2E8EC;padding:0 10px;display:flex;align-items:center;font-weight:600;flex-shrink:0}
+
+    /* ── Language switcher ── */
+    .lang-sw{display:flex;gap:3px}
+    .lang-btn{padding:4px 7px;border:1.5px solid transparent;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;background:transparent;color:var(--text2);transition:all .15s}
+    .lang-btn.active{background:var(--pink-l);color:var(--pink);border-color:var(--pink)}
 
     /* ── Welcome ── */
-    .welcome {
-      flex: 1; display: flex; flex-direction: column; align-items: center;
-      padding: 52px 28px 40px; background: linear-gradient(160deg, var(--pink-bg) 0%, #FFF0F5 100%);
-      overflow-y: auto;
-    }
-    .welcome-logo { font-size: 76px; margin-bottom: 14px; filter: drop-shadow(0 6px 12px rgba(240,98,146,.25)); }
-    .welcome-title { font-size: 30px; font-weight: 800; color: var(--text); margin-bottom: 6px; letter-spacing: -0.5px; }
-    .welcome-sub { font-size: 14px; color: var(--text2); margin-bottom: 44px; text-align: center; line-height: 1.5; }
-    .welcome-btns { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 320px; }
-    .welcome-form { width: 100%; max-width: 340px; }
-    .welcome-back { align-self: flex-start; margin-bottom: 16px; }
-    .welcome-form-title { font-size: 20px; font-weight: 700; margin-bottom: 22px; color: var(--text); }
-
-    /* Emoji picker */
-    .emoji-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
-    .emoji-opt {
-      width: 44px; height: 44px; border-radius: 50%; border: 2.5px solid transparent;
-      font-size: 24px; display: flex; align-items: center; justify-content: center;
-      cursor: pointer; background: #FFF0F5; transition: all .15s;
-    }
-    .emoji-opt.selected { border-color: var(--pink); background: var(--pink-light); }
+    .welcome{flex:1;display:flex;flex-direction:column;align-items:center;padding:52px 28px 40px;background:linear-gradient(160deg,var(--pink-bg),#FFF0F5);overflow-y:auto}
+    .welcome-logo{font-size:76px;margin-bottom:14px;filter:drop-shadow(0 6px 12px rgba(240,98,146,.25))}
+    .welcome-title{font-size:30px;font-weight:800;margin-bottom:6px;letter-spacing:-.5px}
+    .welcome-sub{font-size:14px;color:var(--text2);margin-bottom:44px;text-align:center;line-height:1.6;white-space:pre-line}
+    .welcome-btns{display:flex;flex-direction:column;gap:10px;width:100%;max-width:320px}
+    .welcome-form{width:100%;max-width:340px}
+    .welcome-back{align-self:flex-start;margin-bottom:16px}
+    .welcome-form-title{font-size:20px;font-weight:700;margin-bottom:22px}
+    .emoji-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+    .emoji-opt{width:44px;height:44px;border-radius:50%;border:2.5px solid transparent;font-size:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:#FFF0F5;transition:all .15s}
+    .emoji-opt.selected{border-color:var(--pink);background:var(--pink-l)}
+    .lang-welcome{position:absolute;top:16px;right:16px;display:flex;gap:3px}
 
     /* ── App layout ── */
-    .app-layout { height: 100%; display: flex; flex-direction: column; }
-    .app-header {
-      height: 58px; display: flex; align-items: center; padding: 0 16px;
-      background: #fff; border-bottom: 1px solid var(--border); flex-shrink: 0;
-      gap: 10px;
-    }
-    .baby-ava {
-      width: 38px; height: 38px; border-radius: 50%;
-      background: var(--pink-light); display: flex; align-items: center;
-      justify-content: center; font-size: 20px; flex-shrink: 0;
-    }
-    .baby-name-txt { font-size: 16px; font-weight: 700; }
-    .baby-age-txt { font-size: 11px; color: var(--text2); margin-top: 1px; }
-    .header-right { margin-left: auto; display: flex; gap: 6px; align-items: center; }
-
-    .app-main {
-      flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
-      padding-bottom: calc(var(--nav) + 8px);
-    }
-    .bottom-nav {
-      height: var(--nav); display: flex; align-items: center; background: #fff;
-      border-top: 1px solid var(--border); flex-shrink: 0;
-      padding-bottom: env(safe-area-inset-bottom, 0);
-    }
-    .nav-item {
-      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
-      padding: 6px 4px; background: none; border: none; cursor: pointer;
-      color: var(--text2); transition: color .15s;
-    }
-    .nav-item.active { color: var(--pink); }
-    .nav-icon { font-size: 22px; line-height: 1; }
-    .nav-label { font-size: 10px; font-weight: 600; }
+    .app-layout{height:100%;display:flex;flex-direction:column}
+    .app-header{height:58px;display:flex;align-items:center;padding:0 12px;background:#fff;border-bottom:1px solid var(--border);flex-shrink:0;gap:8px}
+    .baby-ava{width:36px;height:36px;border-radius:50%;background:var(--pink-l);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+    .baby-name-txt{font-size:15px;font-weight:700}
+    .baby-age-txt{font-size:11px;color:var(--text2);margin-top:1px}
+    .header-right{margin-left:auto;display:flex;gap:4px;align-items:center}
+    .app-main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:calc(var(--nav)+8px)}
+    .bottom-nav{height:var(--nav);display:flex;align-items:center;background:#fff;border-top:1px solid var(--border);flex-shrink:0;padding-bottom:env(safe-area-inset-bottom,0)}
+    .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 4px;background:none;border:none;cursor:pointer;color:var(--text2);transition:color .15s}
+    .nav-item.active{color:var(--pink)}
+    .nav-icon{font-size:22px;line-height:1}
+    .nav-label{font-size:10px;font-weight:600}
 
     /* FAB */
-    .fab {
-      position: fixed; bottom: calc(var(--nav) + 14px); right: 20px;
-      width: 54px; height: 54px; border-radius: 50%;
-      background: linear-gradient(135deg, #F48FB1, #EC407A);
-      color: #fff; font-size: 28px; font-weight: 300; border: none; cursor: pointer;
-      box-shadow: 0 4px 18px rgba(236,64,122,.42); display: flex;
-      align-items: center; justify-content: center; z-index: 100; transition: transform .2s;
-    }
-    .fab:active { transform: scale(.9); }
+    .fab{position:fixed;bottom:calc(var(--nav)+14px);right:20px;width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#F48FB1,#EC407A);color:#fff;font-size:28px;font-weight:300;border:none;cursor:pointer;box-shadow:0 4px 18px rgba(236,64,122,.42);display:flex;align-items:center;justify-content:center;z-index:100;transition:transform .2s}
+    .fab:active{transform:scale(.9)}
 
     /* ── Timeline ── */
-    .timeline { padding: 10px 14px; }
-
-    .timer-card {
-      background: linear-gradient(135deg, #FFF0F5, var(--pink-light));
-      border: 1.5px solid #F8BBD0; border-radius: var(--r); padding: 14px 16px;
-      margin-bottom: 10px; display: flex; align-items: center; gap: 12px;
-      animation: pulse-border 2s infinite;
-    }
-    @keyframes pulse-border {
-      0%, 100% { border-color: #F8BBD0; }
-      50% { border-color: var(--pink); }
-    }
-    .timer-ava {
-      width: 46px; height: 46px; border-radius: 50%; background: #fff;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 24px; flex-shrink: 0; box-shadow: 0 2px 8px rgba(240,98,146,.15);
-    }
-    .timer-info { flex: 1; min-width: 0; }
-    .timer-label { font-size: 13px; font-weight: 600; color: var(--text); }
-    .timer-elapsed {
-      font-size: 26px; font-weight: 800; color: var(--pink);
-      font-variant-numeric: tabular-nums; font-family: 'SF Mono','Menlo',monospace;
-      letter-spacing: 1px; line-height: 1.1;
-    }
-    .timer-by { font-size: 11px; color: var(--text2); margin-top: 2px; }
-    .timer-stop {
-      background: #fff; border: 1.5px solid var(--pink); color: var(--pink);
-      font-size: 13px; font-weight: 700; padding: 8px 14px; border-radius: 8px;
-      cursor: pointer; flex-shrink: 0; transition: all .15s;
-    }
-    .timer-stop:active { background: var(--pink-light); }
-
-    .day-header {
-      font-size: 11px; font-weight: 700; color: var(--text2); letter-spacing: .6px;
-      text-transform: uppercase; padding: 10px 2px 6px;
-    }
-    .record-card {
-      background: var(--card); border-radius: var(--r-sm); padding: 13px 14px;
-      margin-bottom: 7px; display: flex; align-items: center; gap: 12px;
-      box-shadow: var(--shadow); cursor: pointer; transition: transform .12s;
-      user-select: none; -webkit-user-select: none;
-    }
-    .record-card:active { transform: scale(.98); }
-    .rec-icon {
-      width: 44px; height: 44px; border-radius: 50%; display: flex;
-      align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;
-    }
-    .rec-body { flex: 1; min-width: 0; }
-    .rec-title { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .rec-detail { font-size: 12px; color: var(--text2); margin-top: 2px; }
-    .rec-by { font-size: 10px; color: #B0A0A6; margin-top: 2px; }
-    .rec-time { font-size: 12px; color: var(--text2); flex-shrink: 0; text-align: right; }
-
-    .ic-breast { background: var(--pink-light); }
-    .ic-bottle { background: var(--blue-light); }
-    .ic-solid  { background: var(--orange-light); }
-    .ic-sleep  { background: var(--blue-light); }
-    .ic-diaper { background: var(--green-light); }
-    .ic-growth { background: var(--purple-light); }
-    .ic-medicine { background: var(--orange-light); }
-    .ic-note   { background: var(--teal-light); }
-
-    .empty-state {
-      display: flex; flex-direction: column; align-items: center;
-      justify-content: center; padding: 64px 24px; text-align: center;
-    }
-    .empty-ico { font-size: 60px; margin-bottom: 14px; opacity: .45; }
-    .empty-title { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
-    .empty-sub { font-size: 13px; color: var(--text2); line-height: 1.5; }
+    .timeline{padding:10px 14px}
+    .timer-card{background:linear-gradient(135deg,#FFF0F5,var(--pink-l));border:1.5px solid #F8BBD0;border-radius:var(--r);padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;animation:pulse-border 2s infinite}
+    @keyframes pulse-border{0%,100%{border-color:#F8BBD0}50%{border-color:var(--pink)}}
+    .timer-ava{width:46px;height:46px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;box-shadow:0 2px 8px rgba(240,98,146,.15)}
+    .timer-info{flex:1;min-width:0}
+    .timer-label{font-size:13px;font-weight:600}
+    .timer-elapsed{font-size:26px;font-weight:800;color:var(--pink);font-variant-numeric:tabular-nums;font-family:'SF Mono','Menlo',monospace;letter-spacing:1px;line-height:1.1}
+    .timer-by{font-size:11px;color:var(--text2);margin-top:2px}
+    .timer-stop{background:#fff;border:1.5px solid var(--pink);color:var(--pink);font-size:13px;font-weight:700;padding:8px 14px;border-radius:8px;cursor:pointer;flex-shrink:0}
+    .day-header{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:.6px;text-transform:uppercase;padding:10px 2px 6px}
+    .record-card{background:var(--card);border-radius:var(--r-sm);padding:13px 14px;margin-bottom:7px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow);cursor:pointer;transition:transform .12s;user-select:none;-webkit-user-select:none}
+    .record-card:active{transform:scale(.98)}
+    .rec-icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+    .rec-body{flex:1;min-width:0}
+    .rec-title{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .rec-detail{font-size:12px;color:var(--text2);margin-top:2px}
+    .rec-by{font-size:10px;color:#B0A0A6;margin-top:2px}
+    .rec-time{font-size:12px;color:var(--text2);flex-shrink:0;text-align:right}
+    .ic-breast{background:var(--pink-l)} .ic-bottle{background:var(--blue-l)} .ic-solid{background:var(--orange-l)}
+    .ic-sleep{background:var(--blue-l)} .ic-diaper{background:var(--green-l)} .ic-growth{background:var(--purple-l)}
+    .ic-medicine{background:var(--orange-l)} .ic-note{background:var(--teal-l)}
+    .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:64px 24px;text-align:center}
+    .empty-ico{font-size:60px;margin-bottom:14px;opacity:.45}
+    .empty-title{font-size:16px;font-weight:600;margin-bottom:6px}
+    .empty-sub{font-size:13px;color:var(--text2);line-height:1.5}
 
     /* ── Stats ── */
-    .stats-page { padding: 14px; }
-    .date-nav {
-      display: flex; align-items: center; justify-content: center;
-      gap: 12px; margin-bottom: 18px;
-    }
-    .date-arrow {
-      width: 34px; height: 34px; border-radius: 50%; background: #fff; border: none;
-      font-size: 16px; cursor: pointer; display: flex; align-items: center;
-      justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,.08); color: var(--text);
-    }
-    .date-arrow:disabled { opacity: .3; cursor: default; }
-    .date-label { font-size: 15px; font-weight: 700; min-width: 90px; text-align: center; }
-    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-    .stat-card { background: var(--card); border-radius: var(--r-sm); padding: 16px; box-shadow: var(--shadow); }
-    .stat-ico { font-size: 26px; margin-bottom: 8px; }
-    .stat-val { font-size: 24px; font-weight: 800; color: var(--text); line-height: 1; }
-    .stat-lbl { font-size: 12px; color: var(--text2); margin-top: 4px; font-weight: 500; }
-    .stat-sub { font-size: 11px; color: #B0A0A6; margin-top: 3px; }
-    .stats-section-title { font-size: 13px; font-weight: 700; color: var(--text2); margin: 14px 2px 8px; letter-spacing: .3px; }
-    .no-data { text-align: center; padding: 32px; color: var(--text2); font-size: 14px; }
+    .stats-page{padding:14px}
+    .stats-tabs{display:flex;background:#F2E8EC;border-radius:8px;padding:3px;gap:2px;margin-bottom:16px}
+    .stats-tab{flex:1;padding:8px;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:var(--text2);transition:all .15s}
+    .stats-tab.active{background:#fff;color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.12)}
+    .date-nav{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:18px}
+    .date-arrow{width:34px;height:34px;border-radius:50%;background:#fff;border:none;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.08);color:var(--text)}
+    .date-arrow:disabled{opacity:.3;cursor:default}
+    .date-label{font-size:15px;font-weight:700;min-width:90px;text-align:center}
+    .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+    .stat-card{background:var(--card);border-radius:var(--r-sm);padding:16px;box-shadow:var(--shadow)}
+    .stat-ico{font-size:26px;margin-bottom:8px}
+    .stat-val{font-size:24px;font-weight:800;line-height:1}
+    .stat-lbl{font-size:12px;color:var(--text2);margin-top:4px;font-weight:500}
+    .stat-sub{font-size:11px;color:#B0A0A6;margin-top:3px}
+    .stats-section-title{font-size:13px;font-weight:700;color:var(--text2);margin:14px 2px 8px;letter-spacing:.3px}
+    .no-data{text-align:center;padding:32px;color:var(--text2);font-size:14px}
+
+    /* Period view */
+    .period-sel{display:flex;gap:6px;margin-bottom:16px;justify-content:center}
+    .period-btn{padding:6px 14px;border-radius:14px;border:1.5px solid var(--border);font-size:12px;font-weight:600;cursor:pointer;background:#fff;color:var(--text2);transition:all .15s}
+    .period-btn.active{background:var(--pink);color:#fff;border-color:var(--pink)}
+    .chart-section{margin-bottom:20px}
+    .chart-section-title{font-size:13px;font-weight:700;color:var(--text2);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+    .chart-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -14px;padding:0 14px 6px;background:var(--bg)}
+    .chart-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+    .leg-item{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text2)}
+    .leg-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+    .leg-rect{width:12px;height:9px;border-radius:2px;flex-shrink:0}
+    .chart-loading{display:flex;align-items:center;justify-content:center;height:100px;color:var(--text2);font-size:13px}
+    .growth-table{width:100%;border-collapse:collapse;font-size:13px}
+    .growth-table th{text-align:left;padding:6px 8px;color:var(--text2);font-weight:600;border-bottom:1px solid var(--border);font-size:11px}
+    .growth-table td{padding:8px;border-bottom:1px solid var(--border)}
+    .growth-table tr:last-child td{border-bottom:none}
 
     /* ── Settings ── */
-    .settings-page { padding: 14px; }
-    .settings-card { background: var(--card); border-radius: var(--r); overflow: hidden; box-shadow: var(--shadow); margin-bottom: 14px; }
-    .s-item {
-      display: flex; align-items: center; padding: 14px 16px;
-      border-bottom: 1px solid var(--border); gap: 12px; cursor: pointer;
-    }
-    .s-item:last-child { border-bottom: none; }
-    .s-icon { font-size: 20px; width: 26px; text-align: center; flex-shrink: 0; }
-    .s-body { flex: 1; min-width: 0; }
-    .s-label { font-size: 12px; color: var(--text2); font-weight: 500; }
-    .s-value { font-size: 15px; font-weight: 600; color: var(--text); margin-top: 1px; }
-    .invite-box {
-      background: #FFF5F8; border: 2px dashed #F8BBD0; border-radius: var(--r-sm);
-      padding: 16px; text-align: center; margin: 10px 0;
-    }
-    .invite-code {
-      font-size: 32px; font-weight: 800; letter-spacing: 8px; color: var(--pink);
-      font-family: 'SF Mono','Menlo',monospace; margin-bottom: 6px;
-    }
-    .invite-hint { font-size: 12px; color: var(--text2); line-height: 1.5; }
-    .settings-section { font-size: 12px; font-weight: 700; color: var(--text2); padding: 14px 2px 6px; letter-spacing: .4px; }
+    .settings-page{padding:14px}
+    .settings-card{background:var(--card);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);margin-bottom:14px}
+    .s-item{display:flex;align-items:center;padding:14px 16px;border-bottom:1px solid var(--border);gap:12px;cursor:pointer}
+    .s-item:last-child{border-bottom:none}
+    .s-icon{font-size:20px;width:26px;text-align:center;flex-shrink:0}
+    .s-body{flex:1;min-width:0}
+    .s-label{font-size:12px;color:var(--text2);font-weight:500}
+    .s-value{font-size:15px;font-weight:600;margin-top:1px}
+    .invite-box{background:#FFF5F8;border:2px dashed #F8BBD0;border-radius:var(--r-sm);padding:16px;text-align:center;margin:10px 0}
+    .invite-code{font-size:32px;font-weight:800;letter-spacing:8px;color:var(--pink);font-family:'SF Mono','Menlo',monospace;margin-bottom:6px}
+    .invite-hint{font-size:12px;color:var(--text2);line-height:1.5;white-space:pre-line}
+    .settings-section{font-size:12px;font-weight:700;color:var(--text2);padding:14px 2px 6px;letter-spacing:.4px}
+    .edit-input{padding:6px 10px;border:1.5px solid var(--pink);border-radius:6px;font-size:15px;font-weight:600;font-family:inherit;color:var(--text);background:var(--pink-l);outline:none;width:100%}
 
-    /* ── Add Modal ── */
-    .overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,.45);
-      backdrop-filter: blur(3px); z-index: 200; display: flex; align-items: flex-end;
-    }
-    .modal {
-      width: 100%; background: #fff; border-radius: var(--r) var(--r) 0 0;
-      padding: 0 18px 20px; padding-bottom: calc(20px + env(safe-area-inset-bottom, 0));
-      max-height: 88vh; overflow-y: auto; display: flex; flex-direction: column;
-    }
-    .modal-handle { width: 36px; height: 4px; background: #E0D0D6; border-radius: 2px; margin: 12px auto 0; flex-shrink: 0; }
-    .modal-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 16px 0 14px; border-bottom: 1px solid var(--border); flex-shrink: 0;
-    }
-    .modal-title { font-size: 17px; font-weight: 700; }
-    .modal-close { font-size: 22px; color: var(--text2); background: none; border: none; cursor: pointer; padding: 2px; }
-    .modal-body { padding-top: 16px; flex: 1; }
-    .modal-footer { padding-top: 14px; border-top: 1px solid var(--border); margin-top: 8px; }
-
-    .type-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-    .type-btn {
-      display: flex; flex-direction: column; align-items: center; gap: 6px;
-      padding: 14px 6px; border-radius: var(--r-sm); border: none; cursor: pointer;
-      background: #FBF3F6; transition: transform .12s;
-    }
-    .type-btn:active { transform: scale(.92); }
-    .type-btn-ico { font-size: 30px; }
-    .type-btn-lbl { font-size: 11px; font-weight: 600; color: var(--text); text-align: center; line-height: 1.3; }
-
-    /* Timer display in modal */
-    .timer-box {
-      background: linear-gradient(135deg, #FFF0F5, var(--pink-light));
-      border-radius: var(--r-sm); padding: 20px; text-align: center; margin: 12px 0;
-    }
-    .timer-box-time {
-      font-size: 52px; font-weight: 800; color: var(--pink);
-      font-variant-numeric: tabular-nums; font-family: 'SF Mono','Menlo',monospace;
-      letter-spacing: 2px; line-height: 1;
-    }
-    .timer-box-lbl { font-size: 13px; color: var(--text2); margin-top: 6px; }
+    /* ── Modal ── */
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(3px);z-index:200;display:flex;align-items:flex-end}
+    .modal{width:100%;background:#fff;border-radius:var(--r) var(--r) 0 0;padding:0 18px 20px;padding-bottom:calc(20px + env(safe-area-inset-bottom,0));max-height:90vh;overflow-y:auto;display:flex;flex-direction:column}
+    .modal-handle{width:36px;height:4px;background:#E0D0D6;border-radius:2px;margin:12px auto 0;flex-shrink:0}
+    .modal-header{display:flex;align-items:center;justify-content:space-between;padding:16px 0 14px;border-bottom:1px solid var(--border);flex-shrink:0}
+    .modal-title{font-size:17px;font-weight:700}
+    .modal-close{font-size:22px;color:var(--text2);background:none;border:none;cursor:pointer;padding:2px}
+    .modal-body{padding-top:16px;flex:1}
+    .modal-footer{padding-top:14px;border-top:1px solid var(--border);margin-top:8px}
+    .type-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+    .type-btn{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 6px;border-radius:var(--r-sm);border:none;cursor:pointer;background:#FBF3F6;transition:transform .12s}
+    .type-btn:active{transform:scale(.92)}
+    .type-btn-ico{font-size:30px}
+    .type-btn-lbl{font-size:11px;font-weight:600;color:var(--text);text-align:center;line-height:1.3}
+    .timer-box{background:linear-gradient(135deg,#FFF0F5,var(--pink-l));border-radius:var(--r-sm);padding:20px;text-align:center;margin:12px 0}
+    .timer-box-time{font-size:52px;font-weight:800;color:var(--pink);font-variant-numeric:tabular-nums;font-family:'SF Mono','Menlo',monospace;letter-spacing:2px;line-height:1}
+    .timer-box-lbl{font-size:13px;color:var(--text2);margin-top:6px}
 
     /* ── Loading / Toast ── */
-    .loading-overlay {
-      position: fixed; inset: 0; background: rgba(255,255,255,.75);
-      display: flex; align-items: center; justify-content: center; z-index: 400;
-    }
-    .spinner {
-      width: 34px; height: 34px; border: 3px solid var(--pink-light);
-      border-top-color: var(--pink); border-radius: 50%;
-      animation: spin .7s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,.75);display:flex;align-items:center;justify-content:center;z-index:400}
+    .spinner{width:34px;height:34px;border:3px solid var(--pink-l);border-top-color:var(--pink);border-radius:50%;animation:spin .7s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .toast{position:fixed;bottom:calc(var(--nav)+72px);left:50%;transform:translateX(-50%);background:rgba(28,28,30,.88);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:500;z-index:500;white-space:nowrap;max-width:88vw;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
 
-    .toast {
-      position: fixed; bottom: calc(var(--nav) + 72px); left: 50%;
-      transform: translateX(-50%); background: rgba(28,28,30,.88); color: #fff;
-      padding: 10px 20px; border-radius: 20px; font-size: 13px; font-weight: 500;
-      z-index: 500; white-space: nowrap; max-width: 88vw; overflow: hidden;
-      text-overflow: ellipsis; pointer-events: none;
-    }
-
-    /* ── Transitions ── */
-    .fade-enter-active,.fade-leave-active { transition: opacity .2s; }
-    .fade-enter-from,.fade-leave-to { opacity: 0; }
-    .slideup-enter-active { transition: transform .28s cubic-bezier(.25,.46,.45,.94), opacity .28s; }
-    .slideup-enter-from { transform: translateY(100%); opacity: 0; }
-    .slideup-leave-active { transition: transform .2s ease-in, opacity .2s; }
-    .slideup-leave-to { transform: translateY(100%); opacity: 0; }
-
-    /* Edit settings inline */
-    .edit-input {
-      padding: 6px 10px; border: 1.5px solid var(--pink); border-radius: 6px;
-      font-size: 15px; font-weight: 600; font-family: inherit; color: var(--text);
-      background: var(--pink-light); outline: none; width: 100%;
-    }
-    .section-header { padding: 10px 2px 2px; }
-    .section-label { font-size: 11px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: .5px; }
+    /* Transitions */
+    .fade-enter-active,.fade-leave-active{transition:opacity .2s}
+    .fade-enter-from,.fade-leave-to{opacity:0}
+    .slideup-enter-active{transition:transform .28s cubic-bezier(.25,.46,.45,.94),opacity .28s}
+    .slideup-enter-from{transform:translateY(100%);opacity:0}
+    .slideup-leave-active{transition:transform .2s ease-in,opacity .2s}
+    .slideup-leave-to{transform:translateY(100%);opacity:0}
   </style>
 </head>
 <body>
 <div id="app">
-
-  <!-- Loading -->
   <div v-if="loading" class="loading-overlay"><div class="spinner"></div></div>
-
-  <!-- Toast -->
-  <transition name="fade">
-    <div v-if="toast" class="toast">{{ toast }}</div>
-  </transition>
+  <transition name="fade"><div v-if="toast" class="toast">{{ toast }}</div></transition>
 
   <!-- ══ WELCOME ══ -->
-  <div v-if="!session.babyId" class="welcome">
+  <div v-if="!session.babyId" class="welcome" style="position:relative">
+    <div class="lang-welcome">
+      <button v-for="l in ['zh','en','fr']" :key="l" class="lang-btn" :class="{active:lang===l}" @click="lang=l">{{ l.toUpperCase() }}</button>
+    </div>
 
-    <!-- Home -->
-    <template v-if="wMode === 'home'">
+    <template v-if="wMode==='home'">
       <div class="welcome-logo">🍼</div>
-      <div class="welcome-title">宝宝日记</div>
-      <div class="welcome-sub">记录宝宝的每个珍贵时刻<br>全家人一起参与、共同分享</div>
+      <div class="welcome-title">{{ t('appName') }}</div>
+      <div class="welcome-sub">{{ t('tagline') }}</div>
       <div class="welcome-btns">
-        <button class="btn btn-primary" @click="wMode='create'">✨ 创建宝宝档案</button>
-        <button class="btn btn-outline" @click="wMode='join'">🔗 加入已有档案</button>
+        <button class="btn btn-primary" @click="wMode='create'">{{ t('createProfile') }}</button>
+        <button class="btn btn-outline" @click="wMode='join'">{{ t('joinProfile') }}</button>
       </div>
     </template>
 
-    <!-- Create -->
-    <template v-if="wMode === 'create'">
-      <button class="btn btn-ghost welcome-back" @click="wMode='home'">← 返回</button>
+    <template v-if="wMode==='create'">
+      <button class="btn btn-ghost welcome-back" @click="wMode='home'">{{ t('back') }}</button>
       <div class="welcome-form">
-        <div class="welcome-form-title">创建宝宝档案</div>
-
+        <div class="welcome-form-title">{{ t('createTitle') }}</div>
         <div class="form-group">
-          <div class="form-label">选个头像</div>
+          <div class="form-label">{{ t('chooseAvatar') }}</div>
           <div class="emoji-row">
-            <div v-for="e in emojis" :key="e" class="emoji-opt" :class="{selected: cForm.emoji===e}" @click="cForm.emoji=e">{{ e }}</div>
+            <div v-for="e in emojis" :key="e" class="emoji-opt" :class="{selected:cForm.emoji===e}" @click="cForm.emoji=e">{{ e }}</div>
           </div>
         </div>
-
         <div class="form-group">
-          <div class="form-label">宝宝名字 *</div>
-          <input class="form-input" v-model="cForm.name" placeholder="例如：小宝、豆豆" maxlength="20" autofocus>
+          <div class="form-label">{{ t('babyName') }} *</div>
+          <input class="form-input" v-model="cForm.name" :placeholder="t('babyNamePH')" maxlength="20">
         </div>
-
         <div class="form-group">
-          <div class="form-label">出生日期</div>
+          <div class="form-label">{{ t('birthday') }}</div>
           <input class="form-input" type="date" v-model="cForm.birthday" :max="todayStr">
         </div>
-
         <div class="form-group">
-          <div class="form-label">性别</div>
+          <div class="form-label">{{ t('gender') }}</div>
           <div class="seg">
-            <button class="seg-btn" :class="{active: cForm.gender==='boy'}" @click="cForm.gender='boy'">👦 男宝</button>
-            <button class="seg-btn" :class="{active: cForm.gender==='girl'}" @click="cForm.gender='girl'">👧 女宝</button>
-            <button class="seg-btn" :class="{active: cForm.gender==='secret'}" @click="cForm.gender='secret'">🌟 保密</button>
+            <button class="seg-btn" :class="{active:cForm.gender==='boy'}" @click="cForm.gender='boy'">{{ t('gBoy') }}</button>
+            <button class="seg-btn" :class="{active:cForm.gender==='girl'}" @click="cForm.gender='girl'">{{ t('gGirl') }}</button>
+            <button class="seg-btn" :class="{active:cForm.gender==='secret'}" @click="cForm.gender='secret'">{{ t('gSecret') }}</button>
           </div>
         </div>
-
         <div class="form-group">
-          <div class="form-label">你是？*</div>
-          <input class="form-input" v-model="cForm.userName" placeholder="例如：妈妈、爸爸" maxlength="10">
+          <div class="form-label">{{ t('yourName') }} *</div>
+          <input class="form-input" v-model="cForm.userName" :placeholder="t('yourNamePH')" maxlength="10">
         </div>
-
-        <button class="btn btn-primary" @click="createBaby" style="margin-top:8px">创建档案</button>
+        <button class="btn btn-primary" @click="createBaby" style="margin-top:8px">{{ t('create') }}</button>
       </div>
     </template>
 
-    <!-- Join -->
-    <template v-if="wMode === 'join'">
-      <button class="btn btn-ghost welcome-back" @click="wMode='home'">← 返回</button>
+    <template v-if="wMode==='join'">
+      <button class="btn btn-ghost welcome-back" @click="wMode='home'">{{ t('back') }}</button>
       <div class="welcome-form">
-        <div class="welcome-form-title">加入宝宝档案</div>
-
+        <div class="welcome-form-title">{{ t('joinTitle') }}</div>
         <div class="form-group">
-          <div class="form-label">邀请码</div>
-          <input class="form-input" v-model="jForm.code" placeholder="输入 6 位邀请码"
-            maxlength="6" style="text-transform:uppercase;letter-spacing:4px;font-size:20px;font-weight:700;text-align:center"
-            @input="jForm.code = jForm.code.toUpperCase()">
+          <div class="form-label">{{ t('inviteCode') }}</div>
+          <input class="form-input" v-model="jForm.code" :placeholder="t('inviteCodePH')" maxlength="6"
+            style="text-transform:uppercase;letter-spacing:4px;font-size:20px;font-weight:700;text-align:center"
+            @input="jForm.code=jForm.code.toUpperCase()">
         </div>
-
         <div class="form-group">
-          <div class="form-label">你是？*</div>
-          <input class="form-input" v-model="jForm.userName" placeholder="例如：爸爸、奶奶" maxlength="10">
+          <div class="form-label">{{ t('yourName') }} *</div>
+          <input class="form-input" v-model="jForm.userName" :placeholder="t('joinNamePH')" maxlength="10">
         </div>
-
-        <button class="btn btn-primary" @click="joinBaby" style="margin-top:8px">加入</button>
+        <button class="btn btn-primary" @click="joinBaby" style="margin-top:8px">{{ t('join') }}</button>
       </div>
     </template>
-
   </div>
 
   <!-- ══ MAIN APP ══ -->
   <div v-else class="app-layout">
-
-    <!-- Header -->
     <header class="app-header">
       <div class="baby-ava" v-if="baby">{{ baby.emoji }}</div>
       <div v-if="baby">
@@ -469,35 +284,31 @@
         <div class="baby-age-txt">{{ babyAge }}</div>
       </div>
       <div class="header-right">
-        <span style="font-size:12px;color:var(--text2);font-weight:500">{{ session.userName }}</span>
+        <div class="lang-sw">
+          <button v-for="l in ['zh','en','fr']" :key="l" class="lang-btn" :class="{active:lang===l}" @click="lang=l">{{ l.toUpperCase() }}</button>
+        </div>
       </div>
     </header>
 
-    <!-- Content -->
     <main class="app-main">
-
       <!-- ── Timeline ── -->
       <div v-if="view==='timeline'" class="timeline">
-
-        <!-- Active timers -->
-        <div v-for="t in activeTimers" :key="t.id" class="timer-card">
-          <div class="timer-ava">{{ timerIcon(t) }}</div>
+        <div v-for="timer in activeTimers" :key="timer.id" class="timer-card">
+          <div class="timer-ava">{{ timer.type==='sleep'?'😴':'🤱' }}</div>
           <div class="timer-info">
-            <div class="timer-label">{{ timerLabel(t) }}</div>
-            <div class="timer-elapsed">{{ getElapsed(t) }}</div>
-            <div class="timer-by" v-if="t.created_by">由 {{ t.created_by }} 开始</div>
+            <div class="timer-label">{{ timerLabel(timer) }}</div>
+            <div class="timer-elapsed">{{ getElapsed(timer) }}</div>
+            <div class="timer-by" v-if="timer.created_by">{{ t('by') }} {{ timer.created_by }}</div>
           </div>
-          <button class="timer-stop" @click="stopTimer(t)">停止</button>
+          <button class="timer-stop" @click="stopTimer(timer)">{{ t('stop') }}</button>
         </div>
 
-        <!-- Empty -->
-        <div v-if="records.length === 0 && activeTimers.length === 0" class="empty-state">
+        <div v-if="records.length===0&&activeTimers.length===0" class="empty-state">
           <div class="empty-ico">📖</div>
-          <div class="empty-title">还没有任何记录</div>
-          <div class="empty-sub">点击右下角 + 开始记录<br>宝宝的第一个时刻吧</div>
+          <div class="empty-title">{{ t('emptyTitle') }}</div>
+          <div class="empty-sub">{{ t('emptySub') }}</div>
         </div>
 
-        <!-- Grouped records -->
         <div v-for="g in groupedRecords" :key="g.date">
           <div class="day-header">{{ fmtDateLabel(g.date) }}</div>
           <div v-for="r in g.records" :key="r.id" class="record-card" @click="confirmDelete(r)">
@@ -510,139 +321,289 @@
             <div class="rec-time">{{ fmtTime(r.recorded_at) }}</div>
           </div>
         </div>
-
       </div>
 
       <!-- ── Stats ── -->
       <div v-if="view==='stats'" class="stats-page">
-        <div class="date-nav">
-          <button class="date-arrow" @click="shiftDate(-1)">‹</button>
-          <div class="date-label">{{ fmtStatsDate(statsDate) }}</div>
-          <button class="date-arrow" @click="shiftDate(1)" :disabled="statsDate >= todayStr">›</button>
+        <div class="stats-tabs">
+          <button class="stats-tab" :class="{active:statsTab==='daily'}" @click="statsTab='daily'">{{ t('statsDaily') }}</button>
+          <button class="stats-tab" :class="{active:statsTab==='period'}" @click="switchPeriodTab()">{{ t('statsPeriod') }}</button>
         </div>
 
-        <div v-if="stats" class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-ico">🍼</div>
-            <div class="stat-val">{{ stats.feeding.count }}</div>
-            <div class="stat-lbl">次喂食</div>
-            <div class="stat-sub" v-if="stats.feeding.total_minutes > 0">{{ fmtDur(stats.feeding.total_minutes) }}</div>
-            <div class="stat-sub" v-if="stats.feeding.total_ml > 0">{{ stats.feeding.total_ml }} ml</div>
+        <!-- Daily -->
+        <div v-if="statsTab==='daily'">
+          <div class="date-nav">
+            <button class="date-arrow" @click="shiftDate(-1)">‹</button>
+            <div class="date-label">{{ fmtStatsDate(statsDate) }}</div>
+            <button class="date-arrow" @click="shiftDate(1)" :disabled="statsDate>=todayStr">›</button>
           </div>
-          <div class="stat-card">
-            <div class="stat-ico">😴</div>
-            <div class="stat-val">{{ stats.sleep.count }}</div>
-            <div class="stat-lbl">次睡眠</div>
-            <div class="stat-sub">{{ stats.sleep.total_minutes > 0 ? fmtDur(stats.sleep.total_minutes) : '—' }}</div>
+          <div v-if="stats" class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-ico">🍼</div>
+              <div class="stat-val">{{ stats.feeding.count }}</div>
+              <div class="stat-lbl">{{ t('feedingTimes') }}</div>
+              <div class="stat-sub" v-if="stats.feeding.total_minutes>0">{{ fmtDur(stats.feeding.total_minutes) }}</div>
+              <div class="stat-sub" v-if="stats.feeding.total_ml>0">{{ stats.feeding.total_ml }} ml</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-ico">😴</div>
+              <div class="stat-val">{{ stats.sleep.count }}</div>
+              <div class="stat-lbl">{{ t('sleepTimes') }}</div>
+              <div class="stat-sub">{{ stats.sleep.total_minutes>0?fmtDur(stats.sleep.total_minutes):'—' }}</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-ico">💧</div>
+              <div class="stat-val">{{ stats.diaper.total }}</div>
+              <div class="stat-lbl">{{ t('diaperTimes') }}</div>
+              <div class="stat-sub">{{ t('dWet') }} {{ stats.diaper.wet }} · {{ t('dDirty') }} {{ stats.diaper.dirty }}</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-ico">📋</div>
+              <div class="stat-val">{{ dayRecords.length }}</div>
+              <div class="stat-lbl">{{ t('totalRecords') }}</div>
+            </div>
           </div>
-          <div class="stat-card">
-            <div class="stat-ico">💧</div>
-            <div class="stat-val">{{ stats.diaper.total }}</div>
-            <div class="stat-lbl">次换尿布</div>
-            <div class="stat-sub">湿 {{ stats.diaper.wet }} · 便 {{ stats.diaper.dirty }}</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-ico">📋</div>
-            <div class="stat-val">{{ dayRecords.length }}</div>
-            <div class="stat-lbl">条记录</div>
-            <div class="stat-sub">今日合计</div>
+          <div class="stats-section-title">{{ t('dayRecords') }}</div>
+          <div v-if="dayRecords.length===0" class="no-data">{{ t('noData') }}</div>
+          <div v-for="r in dayRecords" :key="r.id" class="record-card">
+            <div class="rec-icon" :class="'ic-'+r.type">{{ recIcon(r.type) }}</div>
+            <div class="rec-body">
+              <div class="rec-title">{{ recTitle(r) }}</div>
+              <div class="rec-detail" v-if="recDetail(r)">{{ recDetail(r) }}</div>
+              <div class="rec-by" v-if="r.created_by">by {{ r.created_by }}</div>
+            </div>
+            <div class="rec-time">{{ fmtTime(r.recorded_at) }}</div>
           </div>
         </div>
 
-        <div class="stats-section-title">当天记录</div>
-        <div v-if="dayRecords.length === 0" class="no-data">当天暂无记录</div>
-        <div v-for="r in dayRecords" :key="r.id" class="record-card">
-          <div class="rec-icon" :class="'ic-'+r.type">{{ recIcon(r.type) }}</div>
-          <div class="rec-body">
-            <div class="rec-title">{{ recTitle(r) }}</div>
-            <div class="rec-detail" v-if="recDetail(r)">{{ recDetail(r) }}</div>
-            <div class="rec-by" v-if="r.created_by">by {{ r.created_by }}</div>
+        <!-- Period chart -->
+        <div v-if="statsTab==='period'">
+          <div class="period-sel">
+            <button v-for="p in [7,14,30]" :key="p" class="period-btn" :class="{active:period===p}" @click="setPeriod(p)">
+              {{ t('period'+p) }}
+            </button>
           </div>
-          <div class="rec-time">{{ fmtTime(r.recorded_at) }}</div>
+
+          <!-- Loading -->
+          <div v-if="periodLoading" class="chart-loading">⏳ {{ t('loading') }}</div>
+
+          <template v-if="!periodLoading">
+            <!-- Sleep -->
+            <div class="chart-section">
+              <div class="chart-section-title">😴 {{ t('chartSleep') }}</div>
+              <div class="chart-wrap">
+                <svg :width="svgW" :height="svgH" style="display:block;overflow:visible">
+                  <!-- Hour lines -->
+                  <line v-for="h in 25" :key="'hl'+h"
+                    :x1="ML" :x2="svgW" :y1="MT+(h-1)*HH" :y2="MT+(h-1)*HH"
+                    :stroke="(h-1)%6===0?'#DDD':'#F0EEF0'" stroke-width="1"/>
+                  <!-- Hour labels -->
+                  <text v-for="h in [0,6,12,18,24]" :key="'hlab'+h"
+                    :x="ML-4" :y="MT+h*HH+4"
+                    font-size="9" fill="#9E9E9E" text-anchor="end" font-family="monospace">
+                    {{ String(h).padStart(2,'0') }}:00
+                  </text>
+                  <!-- Day columns -->
+                  <g v-for="(day,di) in periodDays" :key="'scol'+day">
+                    <line :x1="ML+di*CW" :x2="ML+di*CW" :y1="MT-2" :y2="svgH" stroke="#E8E0E4" stroke-width="0.5"/>
+                    <text :x="ML+di*CW+CW/2" :y="MT-6" font-size="9" fill="#9E9E9E" text-anchor="middle">{{ shortDate(day) }}</text>
+                    <rect v-for="s in chartSleep[day]" :key="s.id"
+                      :x="ML+di*CW+3" :y="s.y" :width="CW-6" :height="Math.max(2,s.h)"
+                      :fill="s.color" opacity="0.75" rx="2"/>
+                  </g>
+                </svg>
+              </div>
+              <div class="chart-legend">
+                <div class="leg-item"><div class="leg-rect" style="background:#9FA8DA"></div>{{ t('sSoothing') }}</div>
+                <div class="leg-item"><div class="leg-rect" style="background:#1565C0"></div>{{ t('sDeep') }}</div>
+                <div class="leg-item"><div class="leg-rect" style="background:#42A5F5"></div>{{ t('sTransfer') }}</div>
+                <div class="leg-item"><div class="leg-rect" style="background:#90CAF9"></div>{{ t('sGeneral') }}</div>
+              </div>
+            </div>
+
+            <!-- Feeding -->
+            <div class="chart-section">
+              <div class="chart-section-title">🍼 {{ t('chartFeeding') }}</div>
+              <div class="chart-wrap">
+                <svg :width="svgW" :height="svgH" style="display:block;overflow:visible">
+                  <line v-for="h in 25" :key="'fhl'+h"
+                    :x1="ML" :x2="svgW" :y1="MT+(h-1)*HH" :y2="MT+(h-1)*HH"
+                    :stroke="(h-1)%6===0?'#DDD':'#F0EEF0'" stroke-width="1"/>
+                  <text v-for="h in [0,6,12,18,24]" :key="'fhlab'+h"
+                    :x="ML-4" :y="MT+h*HH+4"
+                    font-size="9" fill="#9E9E9E" text-anchor="end" font-family="monospace">
+                    {{ String(h).padStart(2,'0') }}:00
+                  </text>
+                  <g v-for="(day,di) in periodDays" :key="'fcol'+day">
+                    <line :x1="ML+di*CW" :x2="ML+di*CW" :y1="MT-2" :y2="svgH" stroke="#E8E0E4" stroke-width="0.5"/>
+                    <text :x="ML+di*CW+CW/2" :y="MT-6" font-size="9" fill="#9E9E9E" text-anchor="middle">{{ shortDate(day) }}</text>
+                    <circle v-for="f in chartFeed[day]&&chartFeed[day].breast" :key="f.id"
+                      :cx="ML+di*CW+CW*0.28" :cy="f.y" r="4.5" fill="#F48FB1" opacity="0.9"/>
+                    <circle v-for="f in chartFeed[day]&&chartFeed[day].bottle" :key="f.id"
+                      :cx="ML+di*CW+CW*0.5" :cy="f.y" :r="f.r" fill="#64B5F6" opacity="0.9"/>
+                    <rect v-for="f in chartFeed[day]&&chartFeed[day].solid" :key="f.id"
+                      :x="ML+di*CW+CW*0.72-4" :y="f.y-4" width="8" height="8"
+                      fill="#FFCC80" opacity="0.9" rx="1"/>
+                  </g>
+                </svg>
+              </div>
+              <div class="chart-legend">
+                <div class="leg-item"><div class="leg-dot" style="background:#F48FB1"></div>{{ t('tBreast') }}</div>
+                <div class="leg-item"><div class="leg-dot" style="background:#64B5F6"></div>{{ t('tBottle') }} ({{ t('sizeByMl') }})</div>
+                <div class="leg-item"><div class="leg-rect" style="background:#FFCC80;border-radius:2px"></div>{{ t('tSolid') }}</div>
+              </div>
+            </div>
+
+            <!-- Diaper -->
+            <div class="chart-section">
+              <div class="chart-section-title">💧 {{ t('chartDiaper') }}</div>
+              <div class="chart-wrap">
+                <svg :width="svgW" :height="svgH" style="display:block;overflow:visible">
+                  <line v-for="h in 25" :key="'dhl'+h"
+                    :x1="ML" :x2="svgW" :y1="MT+(h-1)*HH" :y2="MT+(h-1)*HH"
+                    :stroke="(h-1)%6===0?'#DDD':'#F0EEF0'" stroke-width="1"/>
+                  <text v-for="h in [0,6,12,18,24]" :key="'dhlab'+h"
+                    :x="ML-4" :y="MT+h*HH+4"
+                    font-size="9" fill="#9E9E9E" text-anchor="end" font-family="monospace">
+                    {{ String(h).padStart(2,'0') }}:00
+                  </text>
+                  <g v-for="(day,di) in periodDays" :key="'dcol'+day">
+                    <line :x1="ML+di*CW" :x2="ML+di*CW" :y1="MT-2" :y2="svgH" stroke="#E8E0E4" stroke-width="0.5"/>
+                    <text :x="ML+di*CW+CW/2" :y="MT-6" font-size="9" fill="#9E9E9E" text-anchor="middle">{{ shortDate(day) }}</text>
+                    <circle v-for="d in chartDiaper[day]&&chartDiaper[day].wet" :key="d.id+'w'"
+                      :cx="ML+di*CW+CW*0.32" :cy="d.y" r="4" fill="#4DD0E1" opacity="0.9"/>
+                    <circle v-for="d in chartDiaper[day]&&chartDiaper[day].dirty" :key="d.id+'d'"
+                      :cx="ML+di*CW+CW*0.68" :cy="d.y" r="4" fill="#8D6E63" opacity="0.9"/>
+                  </g>
+                </svg>
+              </div>
+              <div class="chart-legend">
+                <div class="leg-item"><div class="leg-dot" style="background:#4DD0E1"></div>{{ t('dWet') }}</div>
+                <div class="leg-item"><div class="leg-dot" style="background:#8D6E63"></div>{{ t('dDirty') }}</div>
+              </div>
+            </div>
+
+            <!-- Medical -->
+            <div class="chart-section">
+              <div class="chart-section-title">💊 {{ t('chartMedical') }}</div>
+              <div class="chart-wrap">
+                <svg :width="svgW" :height="svgH" style="display:block;overflow:visible">
+                  <line v-for="h in 25" :key="'mhl'+h"
+                    :x1="ML" :x2="svgW" :y1="MT+(h-1)*HH" :y2="MT+(h-1)*HH"
+                    :stroke="(h-1)%6===0?'#DDD':'#F0EEF0'" stroke-width="1"/>
+                  <text v-for="h in [0,6,12,18,24]" :key="'mhlab'+h"
+                    :x="ML-4" :y="MT+h*HH+4"
+                    font-size="9" fill="#9E9E9E" text-anchor="end" font-family="monospace">
+                    {{ String(h).padStart(2,'0') }}:00
+                  </text>
+                  <g v-for="(day,di) in periodDays" :key="'mcol'+day">
+                    <line :x1="ML+di*CW" :x2="ML+di*CW" :y1="MT-2" :y2="svgH" stroke="#E8E0E4" stroke-width="0.5"/>
+                    <text :x="ML+di*CW+CW/2" :y="MT-6" font-size="9" fill="#9E9E9E" text-anchor="middle">{{ shortDate(day) }}</text>
+                    <text v-for="m in chartMedical[day]" :key="m.id"
+                      :x="ML+di*CW+CW/2" :y="m.y+5"
+                      font-size="11" text-anchor="middle" opacity="0.9">{{ m.emoji }}</text>
+                  </g>
+                </svg>
+              </div>
+              <div class="chart-legend">
+                <div class="leg-item">💊 {{ t('medMed') }}</div>
+                <div class="leg-item">💉 {{ t('medVax') }}</div>
+                <div class="leg-item">🌡️ {{ t('medTemp') }}</div>
+              </div>
+            </div>
+
+            <!-- Growth table -->
+            <div class="chart-section" v-if="growthData.length>0">
+              <div class="chart-section-title">📏 {{ t('chartGrowth') }}</div>
+              <div class="settings-card" style="overflow:hidden">
+                <table class="growth-table">
+                  <thead><tr>
+                    <th>{{ t('gDate') }}</th>
+                    <th>{{ t('gWeight') }}</th>
+                    <th>{{ t('gHeight') }}</th>
+                    <th>{{ t('gHead') }}</th>
+                  </tr></thead>
+                  <tbody>
+                    <tr v-for="g in growthData" :key="g.id">
+                      <td>{{ shortDate(g.day) }}</td>
+                      <td>{{ g.weight?g.weight+'kg':'—' }}</td>
+                      <td>{{ g.height?g.height+'cm':'—' }}</td>
+                      <td>{{ g.head?g.head+'cm':'—' }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div v-if="growthData.length===0&&!periodLoading" class="no-data" style="margin-top:-10px">{{ t('noGrowth') }}</div>
+          </template>
         </div>
       </div>
 
       <!-- ── Settings ── -->
       <div v-if="view==='settings'" class="settings-page">
-
-        <div class="settings-section">宝宝档案</div>
+        <div class="settings-section">{{ t('secProfile') }}</div>
         <div class="settings-card">
           <div class="s-item" style="cursor:default">
-            <div class="s-icon">{{ baby ? baby.emoji : '👶' }}</div>
-            <div class="s-body">
-              <div class="s-label">宝宝名字</div>
-              <div class="s-value">{{ baby ? baby.name : '' }}</div>
-            </div>
+            <div class="s-icon">{{ baby?baby.emoji:'👶' }}</div>
+            <div class="s-body"><div class="s-label">{{ t('babyName') }}</div><div class="s-value">{{ baby?baby.name:'' }}</div></div>
           </div>
           <div class="s-item" style="cursor:default">
             <div class="s-icon">🎂</div>
-            <div class="s-body">
-              <div class="s-label">出生日期</div>
-              <div class="s-value">{{ baby && baby.birthday ? baby.birthday.replace(/-/g,'/') : '未设置' }}</div>
-            </div>
+            <div class="s-body"><div class="s-label">{{ t('birthday') }}</div><div class="s-value">{{ baby&&baby.birthday?baby.birthday.replace(/-/g,'/'):t('notSet') }}</div></div>
           </div>
           <div class="s-item" style="cursor:default">
             <div class="s-icon">{{ genderIcon }}</div>
-            <div class="s-body">
-              <div class="s-label">性别</div>
-              <div class="s-value">{{ genderLabel }}</div>
-            </div>
+            <div class="s-body"><div class="s-label">{{ t('gender') }}</div><div class="s-value">{{ genderLabel }}</div></div>
           </div>
         </div>
 
-        <div class="settings-section">家庭共享</div>
+        <div class="settings-section">{{ t('secSharing') }}</div>
         <div class="settings-card">
-          <div class="s-item" style="cursor:default; flex-direction:column; align-items:flex-start">
+          <div class="s-item" style="cursor:default;flex-direction:column;align-items:flex-start">
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-              <span class="s-icon">🔗</span>
-              <span style="font-size:14px;font-weight:600">邀请家人</span>
+              <span class="s-icon">🔗</span><span style="font-size:14px;font-weight:600">{{ t('inviteFamily') }}</span>
             </div>
             <div class="invite-box" style="width:100%">
-              <div class="invite-code">{{ baby ? baby.invite_code : '' }}</div>
-              <div class="invite-hint">把这个邀请码告诉家人<br>他们打开应用输入邀请码即可加入</div>
+              <div class="invite-code">{{ baby?baby.invite_code:'' }}</div>
+              <div class="invite-hint">{{ t('inviteHint') }}</div>
             </div>
-            <button class="btn btn-outline btn-sm" style="margin-top:8px" @click="copyCode">📋 复制邀请码</button>
+            <button class="btn btn-outline btn-sm" style="margin-top:8px" @click="copyCode">📋 {{ t('copyCode') }}</button>
           </div>
         </div>
 
-        <div class="settings-section">我的信息</div>
+        <div class="settings-section">{{ t('secMe') }}</div>
         <div class="settings-card">
           <div class="s-item" style="cursor:default">
             <div class="s-icon">👤</div>
             <div class="s-body">
-              <div class="s-label">我的名字</div>
+              <div class="s-label">{{ t('myName') }}</div>
               <input v-if="editingName" class="edit-input" v-model="newName" @blur="saveName" @keyup.enter="saveName" autofocus>
-              <div class="s-value" v-else @click="startEditName" style="cursor:pointer">{{ session.userName }} <span style="font-size:12px;color:var(--pink)">编辑</span></div>
+              <div class="s-value" v-else @click="startEditName" style="cursor:pointer">{{ session.userName }} <span style="font-size:12px;color:var(--pink)">{{ t('edit') }}</span></div>
             </div>
           </div>
         </div>
 
-        <div class="settings-section">其他</div>
+        <div class="settings-section">{{ t('secOther') }}</div>
         <div class="settings-card">
           <div class="s-item" @click="logout">
             <div class="s-icon">🚪</div>
-            <div class="s-body">
-              <div class="s-value" style="color:#E53935">退出当前宝宝档案</div>
-            </div>
+            <div class="s-body"><div class="s-value" style="color:#E53935">{{ t('logout') }}</div></div>
           </div>
         </div>
-
       </div>
     </main>
 
-    <!-- FAB -->
     <button v-if="view==='timeline'" class="fab" @click="openModal">+</button>
 
-    <!-- Bottom Nav -->
     <nav class="bottom-nav">
       <button class="nav-item" :class="{active:view==='timeline'}" @click="switchView('timeline')">
-        <div class="nav-icon">📋</div><div class="nav-label">记录</div>
+        <div class="nav-icon">📋</div><div class="nav-label">{{ t('navTimeline') }}</div>
       </button>
       <button class="nav-item" :class="{active:view==='stats'}" @click="switchView('stats')">
-        <div class="nav-icon">📊</div><div class="nav-label">统计</div>
+        <div class="nav-icon">📊</div><div class="nav-label">{{ t('navStats') }}</div>
       </button>
       <button class="nav-item" :class="{active:view==='settings'}" @click="switchView('settings')">
-        <div class="nav-icon">⚙️</div><div class="nav-label">设置</div>
+        <div class="nav-icon">⚙️</div><div class="nav-label">{{ t('navSettings') }}</div>
       </button>
     </nav>
   </div>
@@ -653,707 +614,882 @@
       <div class="modal">
         <div class="modal-handle"></div>
         <div class="modal-header">
-          <button v-if="mStep==='form'" class="btn btn-ghost" style="padding:4px 0" @click="mStep='type'">← 返回</button>
-          <div class="modal-title">{{ mStep==='type' ? '选择记录类型' : mTypeLabel }}</div>
+          <button v-if="mStep==='form'" class="btn btn-ghost" style="padding:4px 0" @click="mStep='type'">{{ t('back') }}</button>
+          <div class="modal-title">{{ mStep==='type'?t('addRecord'):mTypeLabel }}</div>
           <button class="modal-close" @click="closeModal">×</button>
         </div>
 
         <div class="modal-body">
-
-          <!-- Step 1: Type grid -->
+          <!-- Type grid -->
           <div v-if="mStep==='type'" class="type-grid">
-            <button class="type-btn" v-for="t in recordTypes" :key="t.type" @click="selectType(t.type)">
-              <div class="type-btn-ico">{{ t.icon }}</div>
-              <div class="type-btn-lbl">{{ t.label }}</div>
+            <button class="type-btn" v-for="tp in recordTypes" :key="tp.type" @click="selectType(tp.type)">
+              <div class="type-btn-ico">{{ tp.icon }}</div>
+              <div class="type-btn-lbl">{{ t('t_'+tp.type) }}</div>
             </button>
           </div>
 
-          <!-- Step 2: Forms -->
+          <!-- Forms -->
           <div v-if="mStep==='form'">
-
             <!-- Breast -->
             <template v-if="mType==='breast'">
               <div class="form-group">
-                <div class="form-label">喂食侧</div>
+                <div class="form-label">{{ t('side') }}</div>
                 <div class="seg">
-                  <button class="seg-btn" :class="{active:mForm.side==='left'}" @click="mForm.side='left'">左侧</button>
-                  <button class="seg-btn" :class="{active:mForm.side==='right'}" @click="mForm.side='right'">右侧</button>
-                  <button class="seg-btn" :class="{active:mForm.side==='both'}" @click="mForm.side='both'">双侧</button>
+                  <button class="seg-btn" :class="{active:mForm.side==='left'}" @click="mForm.side='left'">{{ t('sLeft') }}</button>
+                  <button class="seg-btn" :class="{active:mForm.side==='right'}" @click="mForm.side='right'">{{ t('sRight') }}</button>
+                  <button class="seg-btn" :class="{active:mForm.side==='both'}" @click="mForm.side='both'">{{ t('sBoth') }}</button>
                 </div>
               </div>
               <div class="form-group">
-                <div class="form-label">记录方式</div>
+                <div class="form-label">{{ t('sleepTypeLabel') }}</div>
                 <div class="seg">
-                  <button class="seg-btn" :class="{active:mForm.mode==='timer'}" @click="mForm.mode='timer'">⏱ 计时</button>
-                  <button class="seg-btn" :class="{active:mForm.mode==='manual'}" @click="mForm.mode='manual'">✏️ 手动</button>
+                  <button class="seg-btn" :class="{active:mForm.mode==='timer'}" @click="mForm.mode='timer'">⏱ {{ t('mTimer') }}</button>
+                  <button class="seg-btn" :class="{active:mForm.mode==='manual'}" @click="mForm.mode='manual'">✏️ {{ t('mManual') }}</button>
                 </div>
               </div>
               <div v-if="mForm.mode==='timer'" class="timer-box">
                 <div class="timer-box-time">{{ modalTimerDisplay }}</div>
-                <div class="timer-box-lbl" v-if="!modalTimer">点击"开始计时"启动</div>
-                <div class="timer-box-lbl" v-else>正在计时中，完成后点停止保存</div>
+                <div class="timer-box-lbl">{{ modalTimer?t('timerRunning'):t('timerStart') }}</div>
               </div>
               <div v-if="mForm.mode==='manual'" class="form-group">
-                <div class="form-label">时长（分钟）</div>
-                <div class="stepper">
-                  <button class="step-btn" @click="mForm.duration=Math.max(0, mForm.duration-1)">−</button>
-                  <div class="step-val">{{ mForm.duration }}</div>
-                  <div class="step-unit">分钟</div>
-                  <button class="step-btn" @click="mForm.duration=Math.min(120, mForm.duration+1)">+</button>
+                <div class="form-label">{{ t('duration') }}</div>
+                <div class="num-group">
+                  <button class="num-step" @click="mForm.duration=Math.max(0,(mForm.duration||0)-1)">−</button>
+                  <input type="number" class="num-direct" v-model.number="mForm.duration" min="0" max="120" @focus="$event.target.select()">
+                  <span class="num-unit">{{ t('min') }}</span>
+                  <button class="num-step" @click="mForm.duration=Math.min(120,(mForm.duration||0)+1)">+</button>
                 </div>
               </div>
               <div class="form-group">
-                <div class="form-label">备注</div>
-                <input class="form-input" v-model="mForm.note" placeholder="可选">
+                <div class="form-label">{{ t('note') }}</div>
+                <input class="form-input" v-model="mForm.note" :placeholder="t('optional')">
               </div>
             </template>
 
             <!-- Bottle -->
             <template v-if="mType==='bottle'">
               <div class="form-group">
-                <div class="form-label">奶量（ml）</div>
-                <div class="stepper">
-                  <button class="step-btn" @click="mForm.amount=Math.max(0, mForm.amount-10)">−</button>
-                  <div class="step-val">{{ mForm.amount }}</div>
-                  <div class="step-unit">ml</div>
-                  <button class="step-btn" @click="mForm.amount=Math.min(500, mForm.amount+10)">+</button>
+                <div class="form-label">{{ t('amount') }}</div>
+                <div class="num-group">
+                  <button class="num-step" @click="mForm.amount=Math.max(0,(mForm.amount||0)-10)">−</button>
+                  <input type="number" class="num-direct" v-model.number="mForm.amount" min="0" max="600" @focus="$event.target.select()">
+                  <span class="num-unit">ml</span>
+                  <button class="num-step" @click="mForm.amount=Math.min(600,(mForm.amount||0)+10)">+</button>
                 </div>
               </div>
               <div class="form-group">
-                <div class="form-label">内容</div>
+                <div class="form-label">{{ t('content') }}</div>
                 <div class="seg">
-                  <button class="seg-btn" :class="{active:mForm.content==='formula'}" @click="mForm.content='formula'">配方奶</button>
-                  <button class="seg-btn" :class="{active:mForm.content==='breast_milk'}" @click="mForm.content='breast_milk'">母乳</button>
-                  <button class="seg-btn" :class="{active:mForm.content==='mix'}" @click="mForm.content='mix'">混合</button>
+                  <button class="seg-btn" :class="{active:mForm.content==='formula'}" @click="mForm.content='formula'">{{ t('cFormula') }}</button>
+                  <button class="seg-btn" :class="{active:mForm.content==='breast_milk'}" @click="mForm.content='breast_milk'">{{ t('cBreastMilk') }}</button>
+                  <button class="seg-btn" :class="{active:mForm.content==='mix'}" @click="mForm.content='mix'">{{ t('cMix') }}</button>
                 </div>
               </div>
               <div class="form-group">
-                <div class="form-label">时长（分钟，可选）</div>
-                <div class="stepper">
-                  <button class="step-btn" @click="mForm.duration=Math.max(0, mForm.duration-1)">−</button>
-                  <div class="step-val">{{ mForm.duration }}</div>
-                  <div class="step-unit">分钟</div>
-                  <button class="step-btn" @click="mForm.duration=Math.min(60, mForm.duration+1)">+</button>
+                <div class="form-label">{{ t('durationOpt') }}</div>
+                <div class="num-group">
+                  <button class="num-step" @click="mForm.duration=Math.max(0,(mForm.duration||0)-1)">−</button>
+                  <input type="number" class="num-direct" v-model.number="mForm.duration" min="0" max="60" @focus="$event.target.select()">
+                  <span class="num-unit">{{ t('min') }}</span>
+                  <button class="num-step" @click="mForm.duration=Math.min(60,(mForm.duration||0)+1)">+</button>
                 </div>
               </div>
               <div class="form-group">
-                <div class="form-label">备注</div>
-                <input class="form-input" v-model="mForm.note" placeholder="可选">
+                <div class="form-label">{{ t('note') }}</div>
+                <input class="form-input" v-model="mForm.note" :placeholder="t('optional')">
               </div>
             </template>
 
             <!-- Solid -->
             <template v-if="mType==='solid'">
               <div class="form-group">
-                <div class="form-label">食物名称 *</div>
-                <input class="form-input" v-model="mForm.food" placeholder="例如：米粉、蛋黄泥" maxlength="30">
+                <div class="form-label">{{ t('food') }} *</div>
+                <input class="form-input" v-model="mForm.food" :placeholder="t('foodPH')" maxlength="30">
               </div>
               <div class="form-group">
-                <div class="form-label">用量（可选）</div>
-                <input class="form-input" v-model="mForm.amount" placeholder="例如：2勺、30g">
+                <div class="form-label">{{ t('portion') }}</div>
+                <input class="form-input" v-model="mForm.amount" :placeholder="t('portionPH')">
               </div>
               <div class="form-group">
-                <div class="form-label">备注</div>
-                <input class="form-input" v-model="mForm.note" placeholder="可选">
+                <div class="form-label">{{ t('note') }}</div>
+                <input class="form-input" v-model="mForm.note" :placeholder="t('optional')">
               </div>
             </template>
 
             <!-- Sleep -->
             <template v-if="mType==='sleep'">
               <div class="form-group">
-                <div class="form-label">记录方式</div>
+                <div class="form-label">{{ t('sleepTypeLabel') }}</div>
                 <div class="seg">
-                  <button class="seg-btn" :class="{active:mForm.mode==='timer'}" @click="mForm.mode='timer'">⏱ 计时</button>
-                  <button class="seg-btn" :class="{active:mForm.mode==='manual'}" @click="mForm.mode='manual'">✏️ 手动</button>
+                  <button class="seg-btn" :class="{active:mForm.sleep_type==='soothing'}" @click="mForm.sleep_type='soothing'">{{ t('sSoothing') }}</button>
+                  <button class="seg-btn" :class="{active:mForm.sleep_type==='deep'}" @click="mForm.sleep_type='deep'">{{ t('sDeep') }}</button>
+                  <button class="seg-btn" :class="{active:mForm.sleep_type==='transfer'}" @click="mForm.sleep_type='transfer'">{{ t('sTransfer') }}</button>
+                  <button class="seg-btn" :class="{active:mForm.sleep_type==='general'}" @click="mForm.sleep_type='general'">{{ t('sGeneral') }}</button>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="form-label">{{ t('mode') }}</div>
+                <div class="seg">
+                  <button class="seg-btn" :class="{active:mForm.mode==='timer'}" @click="mForm.mode='timer'">⏱ {{ t('mTimer') }}</button>
+                  <button class="seg-btn" :class="{active:mForm.mode==='manual'}" @click="mForm.mode='manual'">✏️ {{ t('mManual') }}</button>
                 </div>
               </div>
               <div v-if="mForm.mode==='timer'" class="timer-box">
                 <div class="timer-box-time">{{ modalTimerDisplay }}</div>
-                <div class="timer-box-lbl" v-if="!modalTimer">点击"开始计时"启动</div>
-                <div class="timer-box-lbl" v-else>宝宝睡着了，醒来后点停止</div>
+                <div class="timer-box-lbl">{{ modalTimer?t('timerSleep'):t('timerStart') }}</div>
               </div>
               <template v-if="mForm.mode==='manual'">
                 <div class="form-group">
-                  <div class="form-label">时长</div>
-                  <div class="stepper">
-                    <button class="step-btn" @click="mForm.hours=Math.max(0, mForm.hours-1)">−</button>
-                    <div class="step-val">{{ mForm.hours }}</div>
-                    <div class="step-unit">小时</div>
-                    <button class="step-btn" @click="mForm.hours=Math.min(12, mForm.hours+1)">+</button>
+                  <div class="form-label">{{ t('durationHours') }}</div>
+                  <div class="num-group">
+                    <button class="num-step" @click="mForm.hours=Math.max(0,(mForm.hours||0)-1)">−</button>
+                    <input type="number" class="num-direct" v-model.number="mForm.hours" min="0" max="12" @focus="$event.target.select()">
+                    <span class="num-unit">{{ t('hr') }}</span>
+                    <button class="num-step" @click="mForm.hours=Math.min(12,(mForm.hours||0)+1)">+</button>
                   </div>
                 </div>
                 <div class="form-group">
-                  <div class="stepper" style="margin-top:-6px">
-                    <button class="step-btn" @click="mForm.minutes=Math.max(0, mForm.minutes-5)">−</button>
-                    <div class="step-val">{{ mForm.minutes }}</div>
-                    <div class="step-unit">分钟</div>
-                    <button class="step-btn" @click="mForm.minutes=Math.min(55, mForm.minutes+5)">+</button>
+                  <div class="num-group">
+                    <button class="num-step" @click="mForm.minutes=Math.max(0,(mForm.minutes||0)-5)">−</button>
+                    <input type="number" class="num-direct" v-model.number="mForm.minutes" min="0" max="59" @focus="$event.target.select()">
+                    <span class="num-unit">{{ t('min') }}</span>
+                    <button class="num-step" @click="mForm.minutes=Math.min(59,(mForm.minutes||0)+5)">+</button>
                   </div>
                 </div>
               </template>
               <div class="form-group">
-                <div class="form-label">备注</div>
-                <input class="form-input" v-model="mForm.note" placeholder="可选">
+                <div class="form-label">{{ t('note') }}</div>
+                <input class="form-input" v-model="mForm.note" :placeholder="t('optional')">
               </div>
             </template>
 
             <!-- Diaper -->
             <template v-if="mType==='diaper'">
               <div class="form-group">
-                <div class="form-label">类型</div>
+                <div class="form-label">{{ t('diaperType') }}</div>
                 <div class="seg">
-                  <button class="seg-btn" :class="{active:mForm.dtype==='wet'}" @click="mForm.dtype='wet'">💧 湿</button>
-                  <button class="seg-btn" :class="{active:mForm.dtype==='dirty'}" @click="mForm.dtype='dirty'">💩 便便</button>
-                  <button class="seg-btn" :class="{active:mForm.dtype==='both'}" @click="mForm.dtype='both'">💧+💩 两者</button>
+                  <button class="seg-btn" :class="{active:mForm.dtype==='wet'}" @click="mForm.dtype='wet'">💧 {{ t('dWet') }}</button>
+                  <button class="seg-btn" :class="{active:mForm.dtype==='dirty'}" @click="mForm.dtype='dirty'">💩 {{ t('dDirty') }}</button>
+                  <button class="seg-btn" :class="{active:mForm.dtype==='both'}" @click="mForm.dtype='both'">{{ t('dBoth') }}</button>
                 </div>
               </div>
               <div class="form-group">
-                <div class="form-label">颜色（可选）</div>
+                <div class="form-label">{{ t('dColor') }}</div>
                 <div class="seg">
-                  <button class="seg-btn" :class="{active:mForm.color===''}" @click="mForm.color=''">不记录</button>
-                  <button class="seg-btn" :class="{active:mForm.color==='黄色'}" @click="mForm.color='黄色'">🟡 黄</button>
-                  <button class="seg-btn" :class="{active:mForm.color==='棕色'}" @click="mForm.color='棕色'">🟤 棕</button>
-                  <button class="seg-btn" :class="{active:mForm.color==='绿色'}" @click="mForm.color='绿色'">🟢 绿</button>
+                  <button class="seg-btn" :class="{active:mForm.color===''}" @click="mForm.color=''">{{ t('cNone') }}</button>
+                  <button class="seg-btn" :class="{active:mForm.color==='Y'}" @click="mForm.color='Y'">🟡</button>
+                  <button class="seg-btn" :class="{active:mForm.color==='B'}" @click="mForm.color='B'">🟤</button>
+                  <button class="seg-btn" :class="{active:mForm.color==='G'}" @click="mForm.color='G'">🟢</button>
                 </div>
               </div>
               <div class="form-group">
-                <div class="form-label">备注</div>
-                <input class="form-input" v-model="mForm.note" placeholder="可选">
+                <div class="form-label">{{ t('note') }}</div>
+                <input class="form-input" v-model="mForm.note" :placeholder="t('optional')">
               </div>
             </template>
 
             <!-- Growth -->
             <template v-if="mType==='growth'">
               <div class="form-group">
-                <div class="form-label">体重（kg）</div>
-                <input class="form-input" type="number" v-model="mForm.weight" placeholder="例如：5.20" step="0.01" min="0" max="30">
+                <div class="form-label">{{ t('gWeight') }} (kg)</div>
+                <div class="num-group">
+                  <button class="num-step" @click="mForm.weight=+(((mForm.weight||0)-.1).toFixed(2))">−</button>
+                  <input type="number" class="num-direct" v-model.number="mForm.weight" :placeholder="t('gWeightPH')" step="0.01" min="0" max="30" @focus="$event.target.select()">
+                  <span class="num-unit">kg</span>
+                  <button class="num-step" @click="mForm.weight=+(((mForm.weight||0)+.1).toFixed(2))">+</button>
+                </div>
               </div>
               <div class="form-group">
-                <div class="form-label">身高（cm）</div>
-                <input class="form-input" type="number" v-model="mForm.height" placeholder="例如：58.5" step="0.1" min="0" max="200">
+                <div class="form-label">{{ t('gHeight') }} (cm)</div>
+                <div class="num-group">
+                  <button class="num-step" @click="mForm.height=+(((mForm.height||0)-.5).toFixed(1))">−</button>
+                  <input type="number" class="num-direct" v-model.number="mForm.height" :placeholder="t('gHeightPH')" step="0.1" min="0" max="200" @focus="$event.target.select()">
+                  <span class="num-unit">cm</span>
+                  <button class="num-step" @click="mForm.height=+(((mForm.height||0)+.5).toFixed(1))">+</button>
+                </div>
               </div>
               <div class="form-group">
-                <div class="form-label">头围（cm）</div>
-                <input class="form-input" type="number" v-model="mForm.head" placeholder="例如：38.5" step="0.1" min="0" max="100">
+                <div class="form-label">{{ t('gHead') }} (cm)</div>
+                <div class="num-group">
+                  <button class="num-step" @click="mForm.head=+(((mForm.head||0)-.5).toFixed(1))">−</button>
+                  <input type="number" class="num-direct" v-model.number="mForm.head" :placeholder="t('gHeadPH')" step="0.1" min="0" max="100" @focus="$event.target.select()">
+                  <span class="num-unit">cm</span>
+                  <button class="num-step" @click="mForm.head=+(((mForm.head||0)+.5).toFixed(1))">+</button>
+                </div>
               </div>
               <div class="form-group">
-                <div class="form-label">备注</div>
-                <input class="form-input" v-model="mForm.note" placeholder="可选">
+                <div class="form-label">{{ t('note') }}</div>
+                <input class="form-input" v-model="mForm.note" :placeholder="t('optional')">
               </div>
             </template>
 
             <!-- Medicine -->
             <template v-if="mType==='medicine'">
               <div class="form-group">
-                <div class="form-label">药品名称 *</div>
-                <input class="form-input" v-model="mForm.medName" placeholder="例如：布洛芬" maxlength="30">
+                <div class="form-label">{{ t('medType') }}</div>
+                <div class="seg">
+                  <button class="seg-btn" :class="{active:mForm.med_type==='medicine'}" @click="mForm.med_type='medicine'">{{ t('medMed') }}</button>
+                  <button class="seg-btn" :class="{active:mForm.med_type==='vaccine'}" @click="mForm.med_type='vaccine'">{{ t('medVax') }}</button>
+                  <button class="seg-btn" :class="{active:mForm.med_type==='temperature'}" @click="mForm.med_type='temperature'">{{ t('medTemp') }}</button>
+                </div>
               </div>
+              <template v-if="mForm.med_type==='temperature'">
+                <div class="form-group">
+                  <div class="form-label">{{ t('temperature') }}</div>
+                  <div class="num-group">
+                    <button class="num-step" @click="mForm.temp_val=+(((mForm.temp_val||36.5)-.1).toFixed(1))">−</button>
+                    <input type="number" class="num-direct" v-model.number="mForm.temp_val" :placeholder="t('tempPH')" step="0.1" min="34" max="42" @focus="$event.target.select()">
+                    <span class="num-unit">°C</span>
+                    <button class="num-step" @click="mForm.temp_val=+(((mForm.temp_val||36.5)+.1).toFixed(1))">+</button>
+                  </div>
+                </div>
+              </template>
+              <template v-else>
+                <div class="form-group">
+                  <div class="form-label">{{ mForm.med_type==='vaccine'?t('vaccineName'):t('medName') }} *</div>
+                  <input class="form-input" v-model="mForm.medName" :placeholder="mForm.med_type==='vaccine'?t('vaccineNamePH'):t('medNamePH')" maxlength="30">
+                </div>
+                <div class="form-group" v-if="mForm.med_type==='medicine'">
+                  <div class="form-label">{{ t('dosage') }}</div>
+                  <input class="form-input" v-model="mForm.dosage" :placeholder="t('dosagePH')">
+                </div>
+              </template>
               <div class="form-group">
-                <div class="form-label">剂量</div>
-                <input class="form-input" v-model="mForm.dosage" placeholder="例如：5ml、0.5片">
-              </div>
-              <div class="form-group">
-                <div class="form-label">备注</div>
-                <input class="form-input" v-model="mForm.note" placeholder="可选">
+                <div class="form-label">{{ t('note') }}</div>
+                <input class="form-input" v-model="mForm.note" :placeholder="t('optional')">
               </div>
             </template>
 
             <!-- Note -->
             <template v-if="mType==='note'">
               <div class="form-group">
-                <div class="form-label">备注内容 *</div>
-                <textarea class="form-input" v-model="mForm.text" placeholder="记录宝宝今天的特别时刻…" rows="4" maxlength="500"></textarea>
+                <div class="form-label">{{ t('noteContent') }} *</div>
+                <textarea class="form-input" v-model="mForm.text" :placeholder="t('notePH')" rows="4" maxlength="500"></textarea>
               </div>
             </template>
-
           </div>
         </div>
 
-        <!-- Footer buttons -->
         <div v-if="mStep==='form'" class="modal-footer">
-          <template v-if="needsTimer && mForm.mode==='timer'">
-            <button v-if="!modalTimer" class="btn btn-primary" @click="startModalTimer">⏱ 开始计时</button>
-            <button v-else class="btn btn-primary" @click="stopModalTimer">⏹ 停止并保存</button>
+          <template v-if="(mType==='breast'||mType==='sleep')&&mForm.mode==='timer'">
+            <button v-if="!modalTimer" class="btn btn-primary" @click="startModalTimer">⏱ {{ t('startTimer') }}</button>
+            <button v-else class="btn btn-primary" @click="stopModalTimer">⏹ {{ t('stopTimer') }}</button>
           </template>
-          <button v-else class="btn btn-primary" @click="saveRecord">保存记录</button>
+          <button v-else class="btn btn-primary" @click="saveRecord">{{ t('save') }}</button>
         </div>
-
       </div>
     </div>
   </transition>
-
 </div>
 
 <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
 <script>
-const { createApp } = Vue;
+/* ── Translations ── */
+const TR = {
+  zh: {
+    appName:'宝宝日记', tagline:'记录宝宝的每个珍贵时刻\n全家人一起参与、共同分享',
+    createProfile:'✨ 创建宝宝档案', joinProfile:'🔗 加入已有档案',
+    createTitle:'创建宝宝档案', joinTitle:'加入宝宝档案',
+    back:'← 返回', chooseAvatar:'选个头像',
+    babyName:'宝宝名字', babyNamePH:'例如：小宝、豆豆',
+    birthday:'出生日期', gender:'性别',
+    gBoy:'👦 男宝', gGirl:'👧 女宝', gSecret:'🌟 保密',
+    yourName:'你是？', yourNamePH:'例如：妈妈、爸爸',
+    inviteCode:'邀请码', inviteCodePH:'输入 6 位邀请码',
+    joinNamePH:'例如：爸爸、奶奶', create:'创建档案', join:'加入',
+    navTimeline:'记录', navStats:'统计', navSettings:'设置',
+    t_breast:'母乳', t_bottle:'奶瓶', t_solid:'辅食', t_sleep:'睡眠',
+    t_diaper:'尿布', t_growth:'成长', t_medicine:'医疗', t_note:'备注',
+    addRecord:'选择记录类型',
+    side:'喂食侧', sLeft:'左侧', sRight:'右侧', sBoth:'双侧',
+    mode:'记录方式', mTimer:'计时', mManual:'手动',
+    timerStart:'点击开始计时', timerRunning:'计时中，完成后点停止',
+    timerSleep:'宝宝睡着了，醒来后点停止',
+    duration:'时长', durationOpt:'时长（可选）', durationHours:'时长',
+    hr:'小时', min:'分钟',
+    amount:'奶量', content:'内容',
+    cFormula:'配方奶', cBreastMilk:'母乳', cMix:'混合',
+    food:'食物名称', foodPH:'例如：米粉、蛋黄泥',
+    portion:'用量', portionPH:'例如：2勺、30g',
+    sleepTypeLabel:'睡眠类型',
+    sSoothing:'哄睡', sDeep:'熟睡', sTransfer:'接觉', sGeneral:'普通',
+    diaperType:'类型', dWet:'湿', dDirty:'便便', dBoth:'两者',
+    dColor:'颜色', cNone:'不记录',
+    gWeight:'体重', gWeightPH:'例如：5.20',
+    gHeight:'身高', gHeightPH:'例如：58.5',
+    gHead:'头围', gHeadPH:'例如：38.5',
+    medType:'记录类型', medMed:'💊 用药', medVax:'💉 疫苗', medTemp:'🌡️ 体温',
+    medName:'药品名称', medNamePH:'例如：布洛芬',
+    dosage:'剂量', dosagePH:'例如：5ml、0.5片',
+    vaccineName:'疫苗名称', vaccineNamePH:'例如：乙肝疫苗',
+    temperature:'体温', tempPH:'例如：36.8',
+    noteContent:'备注内容', notePH:'记录宝宝今天的特别时刻…',
+    note:'备注', optional:'可选',
+    startTimer:'开始计时', stopTimer:'停止并保存', save:'保存记录',
+    stop:'停止', by:'由',
+    statsDaily:'每日', statsPeriod:'周期',
+    period7:'近7天', period14:'近14天', period30:'近30天',
+    feedingTimes:'次喂食', sleepTimes:'次睡眠', diaperTimes:'次换尿布',
+    totalRecords:'条记录', dayRecords:'当天记录', noData:'暂无数据',
+    chartSleep:'睡眠时间线', chartFeeding:'喂养记录',
+    chartDiaper:'排便记录', chartMedical:'医疗记录', chartGrowth:'成长记录',
+    sizeByMl:'按量大小',
+    gDate:'日期', noGrowth:'暂无成长记录',
+    loading:'加载中…',
+    secProfile:'宝宝档案', secSharing:'家庭共享', secMe:'我的信息', secOther:'其他',
+    inviteFamily:'邀请家人', inviteHint:'把这个邀请码告诉家人\n他们打开应用输入邀请码即可加入',
+    copyCode:'复制邀请码', myName:'我的名字', edit:'编辑', logout:'退出当前宝宝档案',
+    notSet:'未设置', genderBoy:'男宝', genderGirl:'女宝', genderSecret:'保密',
+    emptyTitle:'还没有任何记录', emptySub:'点击右下角 + 开始记录\n宝宝的第一个时刻吧',
+    errBabyName:'请输入宝宝的名字', errYourName:'请填写你的称呼',
+    errCode:'请输入邀请码', errNotFound:'档案不存在，请重新加入',
+    errDuration:'请输入时长', errAmount:'请输入奶量',
+    errFood:'请输入食物名称', errSleepDur:'请输入睡眠时长',
+    errGrowth:'请至少填写一项数据', errMedName:'请输入药品/疫苗名称',
+    errNote:'请输入备注内容', errTemp:'请输入体温',
+    msgSaved:'记录已保存 ✓', msgDeleted:'已删除', msgCopied:'邀请码已复制：',
+    confirmDelete:'删除这条记录？', confirmLogout:'确定退出当前宝宝档案？',
+  },
+  en: {
+    appName:'Baby Log', tagline:'Track every precious moment\nShare with the whole family',
+    createProfile:'✨ Create Baby Profile', joinProfile:'🔗 Join Existing Profile',
+    createTitle:'Create Baby Profile', joinTitle:'Join Baby Profile',
+    back:'← Back', chooseAvatar:'Choose avatar',
+    babyName:"Baby's Name", babyNamePH:'e.g. Charlie, Emma',
+    birthday:'Date of Birth', gender:'Gender',
+    gBoy:'👦 Boy', gGirl:'👧 Girl', gSecret:'🌟 Secret',
+    yourName:'You are?', yourNamePH:'e.g. Mom, Dad',
+    inviteCode:'Invite Code', inviteCodePH:'Enter 6-character code',
+    joinNamePH:'e.g. Dad, Grandma', create:'Create Profile', join:'Join',
+    navTimeline:'Timeline', navStats:'Stats', navSettings:'Settings',
+    t_breast:'Breast', t_bottle:'Bottle', t_solid:'Solids', t_sleep:'Sleep',
+    t_diaper:'Diaper', t_growth:'Growth', t_medicine:'Medical', t_note:'Note',
+    addRecord:'Select Record Type',
+    side:'Side', sLeft:'Left', sRight:'Right', sBoth:'Both',
+    mode:'Mode', mTimer:'Timer', mManual:'Manual',
+    timerStart:'Tap Start Timer to begin', timerRunning:'Timer running, tap Stop to save',
+    timerSleep:'Baby sleeping, tap Stop when awake',
+    duration:'Duration', durationOpt:'Duration (optional)', durationHours:'Duration',
+    hr:'hr', min:'min',
+    amount:'Amount', content:'Content',
+    cFormula:'Formula', cBreastMilk:'Breast milk', cMix:'Mixed',
+    food:'Food', foodPH:'e.g. Rice cereal, Sweet potato',
+    portion:'Portion', portionPH:'e.g. 2 tsp, 30g',
+    sleepTypeLabel:'Sleep type',
+    sSoothing:'Soothing', sDeep:'Deep sleep', sTransfer:'Transfer', sGeneral:'General',
+    diaperType:'Type', dWet:'Wet', dDirty:'Dirty', dBoth:'Both',
+    dColor:'Color', cNone:'Skip',
+    gWeight:'Weight', gWeightPH:'e.g. 5.20',
+    gHeight:'Height', gHeightPH:'e.g. 58.5',
+    gHead:'Head circ.', gHeadPH:'e.g. 38.5',
+    medType:'Type', medMed:'💊 Medicine', medVax:'💉 Vaccine', medTemp:'🌡️ Temperature',
+    medName:'Medicine Name', medNamePH:'e.g. Ibuprofen',
+    dosage:'Dosage', dosagePH:'e.g. 5ml, 0.5 tablet',
+    vaccineName:'Vaccine Name', vaccineNamePH:'e.g. Hepatitis B',
+    temperature:'Temperature', tempPH:'e.g. 36.8',
+    noteContent:'Note', notePH:'Record a special moment…',
+    note:'Note', optional:'optional',
+    startTimer:'Start Timer', stopTimer:'Stop & Save', save:'Save',
+    stop:'Stop', by:'by',
+    statsDaily:'Daily', statsPeriod:'Period',
+    period7:'Last 7d', period14:'Last 14d', period30:'Last 30d',
+    feedingTimes:'feedings', sleepTimes:'sleep sessions', diaperTimes:'diapers',
+    totalRecords:'records', dayRecords:"Day's records", noData:'No data',
+    chartSleep:'Sleep Timeline', chartFeeding:'Feedings',
+    chartDiaper:'Diapers', chartMedical:'Medical', chartGrowth:'Growth',
+    sizeByMl:'size = ml',
+    gDate:'Date', noGrowth:'No growth records in period',
+    loading:'Loading…',
+    secProfile:'Baby Profile', secSharing:'Family Sharing', secMe:'My Info', secOther:'Other',
+    inviteFamily:'Invite Family', inviteHint:'Share this code with family\nThey open the app and enter the code to join',
+    copyCode:'Copy Code', myName:'My Name', edit:'Edit', logout:'Sign out of profile',
+    notSet:'Not set', genderBoy:'Boy', genderGirl:'Girl', genderSecret:'Secret',
+    emptyTitle:'No records yet', emptySub:'Tap + to record\nthe first moment',
+    errBabyName:"Please enter baby's name", errYourName:'Please enter your name',
+    errCode:'Please enter invite code', errNotFound:'Profile not found, try again',
+    errDuration:'Please enter duration', errAmount:'Please enter amount',
+    errFood:'Please enter food name', errSleepDur:'Please enter sleep duration',
+    errGrowth:'Please enter at least one measurement', errMedName:'Please enter name',
+    errNote:'Please enter note text', errTemp:'Please enter temperature',
+    msgSaved:'Saved ✓', msgDeleted:'Deleted', msgCopied:'Code copied: ',
+    confirmDelete:'Delete this record?', confirmLogout:'Sign out of this profile?',
+  },
+  fr: {
+    appName:'Journal Bébé', tagline:'Notez chaque moment précieux\nPartagez avec toute la famille',
+    createProfile:'✨ Créer le profil bébé', joinProfile:'🔗 Rejoindre un profil',
+    createTitle:'Créer le profil bébé', joinTitle:'Rejoindre un profil',
+    back:'← Retour', chooseAvatar:'Choisir un avatar',
+    babyName:'Prénom de bébé', babyNamePH:'ex. Léo, Chloé',
+    birthday:'Date de naissance', gender:'Sexe',
+    gBoy:'👦 Garçon', gGirl:'👧 Fille', gSecret:'🌟 Secret',
+    yourName:'Vous êtes ?', yourNamePH:'ex. Maman, Papa',
+    inviteCode:"Code d'invitation", inviteCodePH:'Code à 6 caractères',
+    joinNamePH:'ex. Papa, Grand-mère', create:'Créer le profil', join:'Rejoindre',
+    navTimeline:'Journal', navStats:'Stats', navSettings:'Réglages',
+    t_breast:'Sein', t_bottle:'Biberon', t_solid:'Solides', t_sleep:'Sommeil',
+    t_diaper:'Couche', t_growth:'Croissance', t_medicine:'Médecine', t_note:'Note',
+    addRecord:"Type d'enregistrement",
+    side:'Côté', sLeft:'Gauche', sRight:'Droite', sBoth:'Les deux',
+    mode:'Mode', mTimer:'Minuteur', mManual:'Manuel',
+    timerStart:'Appuyer sur Démarrer', timerRunning:'En cours, appuyer sur Arrêt',
+    timerSleep:'Bébé dort, appuyer sur Arrêt au réveil',
+    duration:'Durée', durationOpt:'Durée (optionnel)', durationHours:'Durée',
+    hr:'h', min:'min',
+    amount:'Quantité', content:'Contenu',
+    cFormula:'Lait maternisé', cBreastMilk:'Lait maternel', cMix:'Mixte',
+    food:'Aliment', foodPH:'ex. Compote pomme, Purée carotte',
+    portion:'Portion', portionPH:'ex. 2 c. à café, 30g',
+    sleepTypeLabel:'Type de sommeil',
+    sSoothing:'Endormissement', sDeep:'Sommeil profond', sTransfer:'Recouchement', sGeneral:'Général',
+    diaperType:'Type', dWet:'Mouillée', dDirty:'Selle', dBoth:'Les deux',
+    dColor:'Couleur', cNone:'Ignorer',
+    gWeight:'Poids', gWeightPH:'ex. 5.20',
+    gHeight:'Taille', gHeightPH:'ex. 58.5',
+    gHead:'Tour de tête', gHeadPH:'ex. 38.5',
+    medType:'Type', medMed:'💊 Médicament', medVax:'💉 Vaccin', medTemp:'🌡️ Température',
+    medName:'Médicament', medNamePH:'ex. Doliprane',
+    dosage:'Dosage', dosagePH:'ex. 5ml, 0.5 cp',
+    vaccineName:'Nom du vaccin', vaccineNamePH:'ex. BCG, Hépatite B',
+    temperature:'Température', tempPH:'ex. 36.8',
+    noteContent:'Note', notePH:'Un moment spécial…',
+    note:'Note', optional:'optionnel',
+    startTimer:'Démarrer', stopTimer:'Arrêter & Sauvegarder', save:'Sauvegarder',
+    stop:'Arrêter', by:'par',
+    statsDaily:'Quotidien', statsPeriod:'Période',
+    period7:'7 derniers j.', period14:'14 derniers j.', period30:'30 derniers j.',
+    feedingTimes:'tétées/biberons', sleepTimes:'sommeils', diaperTimes:'couches',
+    totalRecords:'entrées', dayRecords:'Entrées du jour', noData:'Aucune donnée',
+    chartSleep:'Sommeil', chartFeeding:'Alimentation',
+    chartDiaper:'Couches', chartMedical:'Médecine', chartGrowth:'Croissance',
+    sizeByMl:'taille = ml',
+    gDate:'Date', noGrowth:'Aucune mesure de croissance',
+    loading:'Chargement…',
+    secProfile:'Profil bébé', secSharing:'Partage famille', secMe:'Mes infos', secOther:'Autre',
+    inviteFamily:'Inviter la famille', inviteHint:"Partagez ce code avec votre famille\nIls ouvrent l'app et saisissent le code",
+    copyCode:'Copier le code', myName:'Mon prénom', edit:'Modifier', logout:'Quitter ce profil',
+    notSet:'Non renseigné', genderBoy:'Garçon', genderGirl:'Fille', genderSecret:'Secret',
+    emptyTitle:'Aucun enregistrement', emptySub:'Appuyez sur + pour commencer',
+    errBabyName:'Veuillez entrer le prénom de bébé', errYourName:'Veuillez entrer votre prénom',
+    errCode:"Veuillez entrer le code d'invitation", errNotFound:'Profil introuvable, réessayez',
+    errDuration:'Veuillez entrer la durée', errAmount:'Veuillez entrer la quantité',
+    errFood:"Veuillez entrer le nom de l'aliment", errSleepDur:'Veuillez entrer la durée',
+    errGrowth:'Veuillez renseigner au moins une mesure', errMedName:'Veuillez entrer le nom',
+    errNote:'Veuillez entrer le texte', errTemp:'Veuillez entrer la température',
+    msgSaved:'Sauvegardé ✓', msgDeleted:'Supprimé', msgCopied:'Code copié : ',
+    confirmDelete:'Supprimer cet enregistrement ?', confirmLogout:'Quitter ce profil ?',
+  }
+};
 
+/* ── Vue App ── */
+const { createApp } = Vue;
 createApp({
   data() {
-    const stored = (() => { try { return JSON.parse(localStorage.getItem('bbSession') || '{}'); } catch { return {}; } })();
+    const stored = (() => { try { return JSON.parse(localStorage.getItem('bbSession')||'{}'); } catch { return {}; } })();
+    const storedLang = localStorage.getItem('bbLang') || 'zh';
     return {
-      session: stored,     // { babyId, userName }
-      baby: null,
-      view: 'timeline',
-      records: [],
-      activeTimers: [],
-      stats: null,
-      dayRecords: [],
+      session: stored, baby: null, view: 'timeline',
+      lang: storedLang,
+      records: [], activeTimers: [],
+      stats: null, dayRecords: [],
       statsDate: new Date().toISOString().split('T')[0],
       todayStr: new Date().toISOString().split('T')[0],
-
-      // Welcome
+      statsTab: 'daily',
+      period: 7, periodRecords: [], periodLoading: false,
       wMode: 'home',
       emojis: ['👶','🐣','🌸','⭐','🌙','🐻','🐼','🦁'],
       cForm: { name:'', birthday:'', gender:'boy', emoji:'👶', userName:'' },
       jForm: { code:'', userName:'' },
-
-      // Modal
-      showModal: false,
-      mStep: 'type',
-      mType: null,
-      mForm: {},
-
-      // Timer state (modal)
-      modalTimer: null,     // active timer object from server
-      timerTick: 0,
-      tickInterval: null,
-      pollInterval: null,
-
-      // Settings
-      editingName: false,
-      newName: '',
-
-      // UI
-      loading: false,
-      toast: '',
-      toastTimer: null,
-
+      showModal: false, mStep: 'type', mType: null, mForm: {},
+      modalTimer: null, timerTick: 0, tickInterval: null, pollInterval: null,
+      editingName: false, newName: '',
+      loading: false, toast: '', toastTimer: null,
       recordTypes: [
-        { type:'breast',   icon:'🤱', label:'母乳' },
-        { type:'bottle',   icon:'🍼', label:'奶瓶' },
-        { type:'solid',    icon:'🥣', label:'辅食' },
-        { type:'sleep',    icon:'😴', label:'睡眠' },
-        { type:'diaper',   icon:'💧', label:'尿布' },
-        { type:'growth',   icon:'📏', label:'成长' },
-        { type:'medicine', icon:'💊', label:'用药' },
-        { type:'note',     icon:'📝', label:'备注' },
+        {type:'breast',icon:'🤱'}, {type:'bottle',icon:'🍼'},
+        {type:'solid',icon:'🥣'},  {type:'sleep',icon:'😴'},
+        {type:'diaper',icon:'💧'}, {type:'growth',icon:'📏'},
+        {type:'medicine',icon:'💊'},{type:'note',icon:'📝'},
       ],
+      // SVG chart constants
+      ML:40, MT:28, HH:17, CW:50,
     };
+  },
+
+  watch: {
+    lang(v) { localStorage.setItem('bbLang', v); }
   },
 
   computed: {
     babyAge() {
-      if (!this.baby?.birthday) return '宝宝';
-      const birth = new Date(this.baby.birthday);
-      const days = Math.floor((Date.now() - birth) / 86400000);
-      if (days < 0) return '宝宝';
-      if (days === 0) return '出生第一天';
-      if (days < 28) return `${days} 天`;
-      const months = Math.floor(days / 30.44);
-      if (months < 12) {
-        const w = Math.floor((days - months * 30.44) / 7);
-        return w > 0 ? `${months} 个月 ${w} 周` : `${months} 个月`;
+      if (!this.baby?.birthday) return '';
+      const days = Math.floor((Date.now()-new Date(this.baby.birthday))/86400000);
+      if (days<0) return '';
+      if (days===0) return this.lang==='fr'?'Né aujourd\'hui':this.lang==='en'?'Born today':'出生第一天';
+      if (days<28) return days+(this.lang==='zh'?' 天':this.lang==='fr'?' j':' days');
+      const months=Math.floor(days/30.44);
+      if (months<12) {
+        const w=Math.floor((days-months*30.44)/7);
+        if (this.lang==='zh') return w>0?`${months} 个月 ${w} 周`:`${months} 个月`;
+        if (this.lang==='fr') return w>0?`${months} mois ${w} sem.`:`${months} mois`;
+        return w>0?`${months}mo ${w}w`:`${months} months`;
       }
-      const y = Math.floor(months / 12), m = months % 12;
-      return m > 0 ? `${y} 岁 ${m} 个月` : `${y} 岁`;
+      const y=Math.floor(months/12),m=months%12;
+      if (this.lang==='zh') return m>0?`${y} 岁 ${m} 个月`:`${y} 岁`;
+      if (this.lang==='fr') return m>0?`${y} ans ${m} mois`:`${y} ans`;
+      return m>0?`${y}y ${m}mo`:`${y} years`;
     },
-
     groupedRecords() {
-      const map = {};
-      this.records.forEach(r => {
-        const d = r.recorded_at.slice(0, 10);
-        if (!map[d]) map[d] = { date: d, records: [] };
-        map[d].records.push(r);
-      });
-      return Object.values(map).sort((a, b) => b.date.localeCompare(a.date));
+      const map={};
+      this.records.forEach(r=>{ const d=r.recorded_at.slice(0,10); if(!map[d])map[d]={date:d,records:[]}; map[d].records.push(r); });
+      return Object.values(map).sort((a,b)=>b.date.localeCompare(a.date));
     },
-
-    mTypeLabel() {
-      return this.recordTypes.find(t => t.type === this.mType)?.label || '';
-    },
-
-    needsTimer() {
-      return this.mType === 'breast' || this.mType === 'sleep';
-    },
-
+    mTypeLabel() { return this.t('t_'+(this.mType||'')); },
+    needsTimer() { return this.mType==='breast'||this.mType==='sleep'; },
     modalTimerDisplay() {
       if (!this.modalTimer) return '00:00';
-      this.timerTick; // reactive
-      const elapsed = (Date.now() - new Date(this.modalTimer.started_at)) / 1000;
-      return this.fmtSecs(elapsed);
+      this.timerTick;
+      return this.fmtSecs((Date.now()-new Date(this.modalTimer.started_at))/1000);
     },
-
-    genderIcon() {
-      if (!this.baby) return '🌟';
-      return this.baby.gender === 'boy' ? '👦' : this.baby.gender === 'girl' ? '👧' : '🌟';
-    },
-
+    genderIcon() { return this.baby?.gender==='boy'?'👦':this.baby?.gender==='girl'?'👧':'🌟'; },
     genderLabel() {
-      if (!this.baby) return '未设置';
-      return this.baby.gender === 'boy' ? '男宝' : this.baby.gender === 'girl' ? '女宝' : '保密';
+      if (!this.baby) return '';
+      const k=this.baby.gender==='boy'?'genderBoy':this.baby.gender==='girl'?'genderGirl':'genderSecret';
+      return this.t(k);
+    },
+
+    // Period
+    periodDays() {
+      const days=[];
+      for(let i=this.period-1;i>=0;i--){
+        const d=new Date(); d.setDate(d.getDate()-i);
+        days.push(this.localDate(d));
+      }
+      return days;
+    },
+    svgW() { return this.ML+this.periodDays.length*this.CW; },
+    svgH() { return this.MT+24*this.HH+10; },
+
+    chartSleep() {
+      const r={}; this.periodDays.forEach(d=>r[d]=[]);
+      const colorMap={soothing:'#9FA8DA',deep:'#1565C0',transfer:'#42A5F5',general:'#90CAF9'};
+      this.periodRecords.filter(x=>x.type==='sleep').forEach(x=>{
+        const day=this.localDate(x.recorded_at);
+        if(!r[day])return;
+        const end=new Date(x.recorded_at);
+        const dur=(x.data.duration||0);
+        const start=new Date(end.getTime()-dur*60000);
+        const startDay=this.localDate(start);
+        const endH=end.getHours()+end.getMinutes()/60;
+        const rawStartH=start.getHours()+start.getMinutes()/60;
+        const startH=startDay<day?0:rawStartH;
+        r[day].push({id:x.id,y:this.MT+startH*this.HH,h:Math.max(2,(endH-startH)*this.HH),color:colorMap[x.data.sleep_type]||colorMap.general});
+      });
+      return r;
+    },
+    chartFeed() {
+      const r={}; this.periodDays.forEach(d=>r[d]={breast:[],bottle:[],solid:[]});
+      this.periodRecords.filter(x=>['breast','bottle','solid'].includes(x.type)).forEach(x=>{
+        const day=this.localDate(x.recorded_at);
+        if(!r[day])return;
+        const y=this.timeToY(x.recorded_at);
+        if(x.type==='breast') r[day].breast.push({id:x.id,y});
+        else if(x.type==='bottle') r[day].bottle.push({id:x.id,y,r:Math.max(3,Math.min(10,3+(x.data.amount||100)/50))});
+        else r[day].solid.push({id:x.id,y});
+      });
+      return r;
+    },
+    chartDiaper() {
+      const r={}; this.periodDays.forEach(d=>r[d]={wet:[],dirty:[]});
+      this.periodRecords.filter(x=>x.type==='diaper').forEach(x=>{
+        const day=this.localDate(x.recorded_at);
+        if(!r[day])return;
+        const y=this.timeToY(x.recorded_at);
+        const tp=x.data.type;
+        if(tp==='wet'||tp==='both') r[day].wet.push({id:x.id,y});
+        if(tp==='dirty'||tp==='both') r[day].dirty.push({id:x.id,y});
+      });
+      return r;
+    },
+    chartMedical() {
+      const r={}; this.periodDays.forEach(d=>r[d]=[]);
+      const em={medicine:'💊',vaccine:'💉',temperature:'🌡️'};
+      this.periodRecords.filter(x=>x.type==='medicine').forEach(x=>{
+        const day=this.localDate(x.recorded_at);
+        if(!r[day])return;
+        r[day].push({id:x.id,y:this.timeToY(x.recorded_at),emoji:em[x.data.med_type]||'💊'});
+      });
+      return r;
+    },
+    growthData() {
+      return this.periodRecords
+        .filter(r=>r.type==='growth')
+        .map(r=>({id:r.id,day:this.localDate(r.recorded_at),weight:r.data.weight||null,height:r.data.height||null,head:r.data.head||null}));
     },
   },
 
   methods: {
-    // ── Session ──
-    saveSession() { localStorage.setItem('bbSession', JSON.stringify(this.session)); },
+    t(key) {
+      const tr=TR[this.lang]||TR.zh;
+      return tr[key]!==undefined?tr[key]:(TR.zh[key]||key);
+    },
 
+    saveSession() { localStorage.setItem('bbSession',JSON.stringify(this.session)); },
     logout() {
-      if (!confirm('确定退出当前宝宝档案？')) return;
-      this.stopIntervals();
-      this.session = {}; this.baby = null; this.records = []; this.activeTimers = [];
+      if(!confirm(this.t('confirmLogout')))return;
+      this.stopIntervals(); this.session={}; this.baby=null; this.records=[]; this.activeTimers=[];
       localStorage.removeItem('bbSession');
     },
 
-    // ── Welcome ──
     async createBaby() {
-      if (!this.cForm.name.trim()) return this.showToast('请输入宝宝的名字');
-      if (!this.cForm.userName.trim()) return this.showToast('请填写你的称呼');
-      this.loading = true;
+      if(!this.cForm.name.trim())return this.showToast(this.t('errBabyName'));
+      if(!this.cForm.userName.trim())return this.showToast(this.t('errYourName'));
+      this.loading=true;
       try {
-        const r = await this.api('POST', '/api/babies', {
-          name: this.cForm.name.trim(), birthday: this.cForm.birthday || null,
-          gender: this.cForm.gender, emoji: this.cForm.emoji,
-        });
-        this.session = { babyId: r.id, userName: this.cForm.userName.trim() };
-        this.saveSession();
-        await this.init();
-      } catch(e) { this.showToast(e.message); }
-      finally { this.loading = false; }
+        const r=await this.api('POST','/api/babies',{name:this.cForm.name.trim(),birthday:this.cForm.birthday||null,gender:this.cForm.gender,emoji:this.cForm.emoji});
+        this.session={babyId:r.id,userName:this.cForm.userName.trim()};
+        this.saveSession(); await this.init();
+      } catch(e){this.showToast(e.message);}
+      finally{this.loading=false;}
     },
-
     async joinBaby() {
-      if (!this.jForm.code.trim()) return this.showToast('请输入邀请码');
-      if (!this.jForm.userName.trim()) return this.showToast('请填写你的称呼');
-      this.loading = true;
+      if(!this.jForm.code.trim())return this.showToast(this.t('errCode'));
+      if(!this.jForm.userName.trim())return this.showToast(this.t('errYourName'));
+      this.loading=true;
       try {
-        const r = await this.api('GET', `/api/babies/by-code/${this.jForm.code.trim()}`);
-        this.session = { babyId: r.id, userName: this.jForm.userName.trim() };
-        this.saveSession();
-        await this.init();
-      } catch(e) { this.showToast(e.message); }
-      finally { this.loading = false; }
+        const r=await this.api('GET',`/api/babies/by-code/${this.jForm.code.trim()}`);
+        this.session={babyId:r.id,userName:this.jForm.userName.trim()};
+        this.saveSession(); await this.init();
+      } catch(e){this.showToast(e.message);}
+      finally{this.loading=false;}
     },
 
-    // ── Init ──
     async init() {
-      if (!this.session.babyId) return;
+      if(!this.session.babyId)return;
       try {
-        this.baby = await this.api('GET', `/api/babies/${this.session.babyId}`);
-        await Promise.all([this.loadRecords(), this.loadTimers()]);
+        this.baby=await this.api('GET',`/api/babies/${this.session.babyId}`);
+        await Promise.all([this.loadRecords(),this.loadTimers()]);
         this.startIntervals();
-      } catch(e) {
-        this.session = {}; localStorage.removeItem('bbSession');
-        this.showToast('档案不存在，请重新加入');
-      }
+      } catch(e){ this.session={}; localStorage.removeItem('bbSession'); this.showToast(this.t('errNotFound')); }
     },
-
-    // ── Records ──
     async loadRecords() {
-      this.records = await this.api('GET', `/api/babies/${this.session.babyId}/records?limit=200`);
+      this.records=await this.api('GET',`/api/babies/${this.session.babyId}/records?limit=200`);
     },
-
     async loadTimers() {
-      this.activeTimers = await this.api('GET', `/api/babies/${this.session.babyId}/timers`);
-      // sync modal timer
-      if (this.modalTimer) {
-        const still = this.activeTimers.find(t => t.id === this.modalTimer.id);
-        if (!still) this.modalTimer = null;
-      }
+      this.activeTimers=await this.api('GET',`/api/babies/${this.session.babyId}/timers`);
+      if(this.modalTimer&&!this.activeTimers.find(t=>t.id===this.modalTimer.id))this.modalTimer=null;
     },
-
     async loadStats() {
-      this.stats = await this.api('GET', `/api/babies/${this.session.babyId}/stats?date=${this.statsDate}`);
-      this.dayRecords = await this.api('GET', `/api/babies/${this.session.babyId}/records?date=${this.statsDate}`);
+      this.stats=await this.api('GET',`/api/babies/${this.session.babyId}/stats?date=${this.statsDate}`);
+      this.dayRecords=await this.api('GET',`/api/babies/${this.session.babyId}/records?date=${this.statsDate}`);
+    },
+    async loadPeriodRecords() {
+      const to=this.todayStr;
+      const d=new Date(); d.setDate(d.getDate()-(this.period-1));
+      const from=this.localDate(d);
+      this.periodLoading=true;
+      try { this.periodRecords=await this.api('GET',`/api/babies/${this.session.babyId}/records?date_from=${from}&date_to=${to}&limit=1000`); }
+      catch(e){this.showToast(e.message);}
+      finally{this.periodLoading=false;}
     },
 
-    async addRecord(type, data, note) {
-      const r = await this.api('POST', `/api/babies/${this.session.babyId}/records`, {
-        type, data, note: note || null, created_by: this.session.userName,
-      });
+    async addRecord(type,data,note) {
+      const r=await this.api('POST',`/api/babies/${this.session.babyId}/records`,{type,data,note:note||null,created_by:this.session.userName});
       this.records.unshift(r);
     },
-
     async confirmDelete(record) {
-      if (!confirm(`删除这条记录？\n${this.recTitle(record)}`)) return;
-      await this.api('DELETE', `/api/records/${record.id}`);
-      this.records = this.records.filter(r => r.id !== record.id);
-      this.showToast('已删除');
+      if(!confirm(this.t('confirmDelete')+'\n'+this.recTitle(record)))return;
+      await this.api('DELETE',`/api/records/${record.id}`);
+      this.records=this.records.filter(r=>r.id!==record.id);
+      this.showToast(this.t('msgDeleted'));
     },
 
-    // ── Timers ──
     async stopTimer(t) {
-      const result = await this.api('PUT', `/api/timers/${t.id}/stop`);
-      this.activeTimers = this.activeTimers.filter(x => x.id !== t.id);
-      // auto-create record
-      await this.addRecord(t.type, { side: t.sub_type, duration: result.duration_minutes });
-      this.showToast('已保存记录');
+      const res=await this.api('PUT',`/api/timers/${t.id}/stop`);
+      this.activeTimers=this.activeTimers.filter(x=>x.id!==t.id);
+      await this.addRecord(t.type,{side:t.sub_type,duration:res.duration_minutes,sleep_type:t.sub_type});
+      this.showToast(this.t('msgSaved'));
     },
-
-    getElapsed(t) {
-      this.timerTick;
-      return this.fmtSecs((Date.now() - new Date(t.started_at)) / 1000);
-    },
-
-    timerIcon(t) {
-      return t.type === 'sleep' ? '😴' : '🤱';
-    },
-
+    getElapsed(t) { this.timerTick; return this.fmtSecs((Date.now()-new Date(t.started_at))/1000); },
     timerLabel(t) {
-      if (t.type === 'sleep') return '睡眠计时中';
-      const side = t.sub_type === 'left' ? '左侧' : t.sub_type === 'right' ? '右侧' : '双侧';
-      return `母乳 · ${side}`;
+      if(t.type==='sleep') return this.t('t_sleep')+' ⏱';
+      const side=t.sub_type==='left'?this.t('sLeft'):t.sub_type==='right'?this.t('sRight'):this.t('sBoth');
+      return this.t('t_breast')+' · '+side;
     },
 
-    // ── Modal ──
-    openModal() {
-      this.showModal = true; this.mStep = 'type'; this.mType = null; this.mForm = {};
-    },
-
-    closeModal() {
-      this.showModal = false;
-      // keep modalTimer running; it shows on timeline
-    },
-
+    openModal() { this.showModal=true; this.mStep='type'; this.mType=null; this.mForm={}; },
+    closeModal() { this.showModal=false; },
     selectType(type) {
-      this.mType = type; this.mStep = 'form';
-      switch(type) {
-        case 'breast':   this.mForm = { side:'left', mode:'timer', duration:5, note:'' }; break;
-        case 'bottle':   this.mForm = { amount:100, content:'formula', duration:0, note:'' }; break;
-        case 'solid':    this.mForm = { food:'', amount:'', note:'' }; break;
-        case 'sleep':    this.mForm = { mode:'timer', hours:0, minutes:30, note:'' }; break;
-        case 'diaper':   this.mForm = { dtype:'wet', color:'', note:'' }; break;
-        case 'growth':   this.mForm = { weight:'', height:'', head:'', note:'' }; break;
-        case 'medicine': this.mForm = { medName:'', dosage:'', note:'' }; break;
-        case 'note':     this.mForm = { text:'' }; break;
-      }
+      this.mType=type; this.mStep='form';
+      const d={breast:{side:'left',mode:'timer',duration:0,note:''},bottle:{amount:120,content:'formula',duration:0,note:''},solid:{food:'',amount:'',note:''},sleep:{sleep_type:'deep',mode:'timer',hours:0,minutes:30,note:''},diaper:{dtype:'wet',color:'',note:''},growth:{weight:null,height:null,head:null,note:''},medicine:{med_type:'medicine',medName:'',dosage:'',temp_val:36.5,note:''},note:{text:''}};
+      this.mForm={...(d[type]||{})};
     },
 
     async startModalTimer() {
-      const subType = this.mType === 'breast' ? this.mForm.side : null;
-      this.loading = true;
+      const subType=this.mType==='breast'?this.mForm.side:(this.mForm.sleep_type||null);
+      this.loading=true;
       try {
-        const t = await this.api('POST', `/api/babies/${this.session.babyId}/timers`, {
-          type: this.mType, sub_type: subType, created_by: this.session.userName,
-        });
-        this.modalTimer = t;
-        this.activeTimers.push(t);
-      } catch(e) { this.showToast(e.message); }
-      finally { this.loading = false; }
+        const t=await this.api('POST',`/api/babies/${this.session.babyId}/timers`,{type:this.mType,sub_type:subType,created_by:this.session.userName});
+        this.modalTimer=t; this.activeTimers.push(t);
+      } catch(e){this.showToast(e.message);}
+      finally{this.loading=false;}
     },
-
     async stopModalTimer() {
-      if (!this.modalTimer) return;
-      this.loading = true;
+      if(!this.modalTimer)return;
+      this.loading=true;
       try {
-        const result = await this.api('PUT', `/api/timers/${this.modalTimer.id}/stop`);
-        this.activeTimers = this.activeTimers.filter(t => t.id !== this.modalTimer.id);
-        await this.addRecord(this.mType, {
-          side: this.modalTimer.sub_type,
-          duration: result.duration_minutes,
-        }, this.mForm.note || null);
-        this.modalTimer = null;
-        this.showModal = false;
-        this.showToast('已保存');
-      } catch(e) { this.showToast(e.message); }
-      finally { this.loading = false; }
+        const res=await this.api('PUT',`/api/timers/${this.modalTimer.id}/stop`);
+        this.activeTimers=this.activeTimers.filter(t=>t.id!==this.modalTimer.id);
+        await this.addRecord(this.mType,{side:this.modalTimer.sub_type,duration:res.duration_minutes,sleep_type:this.mForm.sleep_type},this.mForm.note||null);
+        this.modalTimer=null; this.showModal=false; this.showToast(this.t('msgSaved'));
+      } catch(e){this.showToast(e.message);}
+      finally{this.loading=false;}
     },
 
     async saveRecord() {
-      const f = this.mForm;
-      this.loading = true;
+      const f=this.mForm; this.loading=true;
       try {
         switch(this.mType) {
           case 'breast':
-            if (f.duration <= 0) return this.showToast('请输入时长');
-            await this.addRecord('breast', { side: f.side, duration: f.duration }, f.note);
-            break;
+            if(!f.duration&&f.duration!==0)return this.showToast(this.t('errDuration'));
+            await this.addRecord('breast',{side:f.side,duration:f.duration||0},f.note); break;
           case 'bottle':
-            if (!f.amount) return this.showToast('请输入奶量');
-            await this.addRecord('bottle', { amount: Number(f.amount), content: f.content, duration: f.duration }, f.note);
-            break;
+            if(!f.amount)return this.showToast(this.t('errAmount'));
+            await this.addRecord('bottle',{amount:Number(f.amount),content:f.content,duration:f.duration||0},f.note); break;
           case 'solid':
-            if (!f.food.trim()) return this.showToast('请输入食物名称');
-            await this.addRecord('solid', { food: f.food.trim(), amount: f.amount }, f.note);
-            break;
+            if(!f.food.trim())return this.showToast(this.t('errFood'));
+            await this.addRecord('solid',{food:f.food.trim(),amount:f.amount},f.note); break;
           case 'sleep': {
-            const dur = f.hours * 60 + f.minutes;
-            if (dur <= 0) return this.showToast('请输入睡眠时长');
-            await this.addRecord('sleep', { duration: dur }, f.note);
-            break;
+            const dur=(f.hours||0)*60+(f.minutes||0);
+            if(dur<=0)return this.showToast(this.t('errSleepDur'));
+            await this.addRecord('sleep',{duration:dur,sleep_type:f.sleep_type},f.note); break;
           }
           case 'diaper':
-            await this.addRecord('diaper', { type: f.dtype, color: f.color }, f.note);
-            break;
+            await this.addRecord('diaper',{type:f.dtype,color:f.color},f.note); break;
           case 'growth':
-            if (!f.weight && !f.height && !f.head) return this.showToast('请至少填写一项数据');
-            await this.addRecord('growth', {
-              weight: f.weight ? parseFloat(f.weight) : null,
-              height: f.height ? parseFloat(f.height) : null,
-              head:   f.head   ? parseFloat(f.head)   : null,
-            }, f.note);
-            break;
+            if(!f.weight&&!f.height&&!f.head)return this.showToast(this.t('errGrowth'));
+            await this.addRecord('growth',{weight:f.weight?+f.weight:null,height:f.height?+f.height:null,head:f.head?+f.head:null},f.note); break;
           case 'medicine':
-            if (!f.medName.trim()) return this.showToast('请输入药品名称');
-            await this.addRecord('medicine', { name: f.medName.trim(), dosage: f.dosage }, f.note);
+            if(f.med_type==='temperature'){
+              if(!f.temp_val)return this.showToast(this.t('errTemp'));
+              await this.addRecord('medicine',{med_type:'temperature',temp:f.temp_val},f.note);
+            } else {
+              if(!f.medName.trim())return this.showToast(this.t('errMedName'));
+              await this.addRecord('medicine',{med_type:f.med_type,name:f.medName.trim(),dosage:f.dosage},f.note);
+            }
             break;
           case 'note':
-            if (!f.text.trim()) return this.showToast('请输入备注内容');
-            await this.addRecord('note', { text: f.text.trim() }, null);
-            break;
+            if(!f.text.trim())return this.showToast(this.t('errNote'));
+            await this.addRecord('note',{text:f.text.trim()},null); break;
         }
-        this.showModal = false;
-        this.showToast('记录已保存 ✓');
-      } catch(e) { this.showToast(e.message); }
-      finally { this.loading = false; }
+        this.showModal=false; this.showToast(this.t('msgSaved'));
+      } catch(e){this.showToast(e.message);}
+      finally{this.loading=false;}
     },
 
-    // ── Settings ──
-    startEditName() { this.newName = this.session.userName; this.editingName = true; },
-    saveName() {
-      if (this.newName.trim()) {
-        this.session.userName = this.newName.trim();
-        this.saveSession();
-      }
-      this.editingName = false;
+    startEditName(){this.newName=this.session.userName;this.editingName=true;},
+    saveName(){if(this.newName.trim()){this.session.userName=this.newName.trim();this.saveSession();}this.editingName=false;},
+    copyCode(){
+      const code=this.baby?.invite_code||'';
+      if(navigator.clipboard)navigator.clipboard.writeText(code).then(()=>this.showToast(this.t('msgCopied')+code));
+      else this.showToast(this.t('msgCopied')+code);
     },
 
-    copyCode() {
-      const code = this.baby?.invite_code || '';
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(code).then(() => this.showToast('邀请码已复制：' + code));
-      } else {
-        this.showToast('邀请码：' + code);
-      }
-    },
+    switchView(v) { this.view=v; if(v==='stats')this.loadStats(); if(v==='timeline')this.loadRecords(); },
+    shiftDate(d){ const dt=new Date(this.statsDate);dt.setDate(dt.getDate()+d);const s=dt.toISOString().split('T')[0];if(s>this.todayStr)return;this.statsDate=s;this.loadStats(); },
+    switchPeriodTab(){ this.statsTab='period'; this.loadPeriodRecords(); },
+    setPeriod(p){ this.period=p; this.loadPeriodRecords(); },
 
-    // ── View switch ──
-    switchView(v) {
-      this.view = v;
-      if (v === 'stats') this.loadStats();
-      if (v === 'timeline') this.loadRecords();
+    startIntervals(){
+      this.tickInterval=setInterval(()=>this.timerTick++,1000);
+      this.pollInterval=setInterval(()=>this.loadTimers(),20000);
     },
+    stopIntervals(){ clearInterval(this.tickInterval); clearInterval(this.pollInterval); },
 
-    shiftDate(d) {
-      const dt = new Date(this.statsDate);
-      dt.setDate(dt.getDate() + d);
-      const s = dt.toISOString().split('T')[0];
-      if (s > this.todayStr) return;
-      this.statsDate = s;
-      this.loadStats();
-    },
-
-    // ── Intervals ──
-    startIntervals() {
-      this.tickInterval = setInterval(() => this.timerTick++, 1000);
-      this.pollInterval = setInterval(() => this.loadTimers(), 20000);
-    },
-
-    stopIntervals() {
-      clearInterval(this.tickInterval);
-      clearInterval(this.pollInterval);
-    },
-
-    // ── Helpers ──
-    recIcon(type) {
-      const m = { breast:'🤱', bottle:'🍼', solid:'🥣', sleep:'😴', diaper:'💧', growth:'📏', medicine:'💊', note:'📝' };
-      return m[type] || '📌';
-    },
-
-    recTitle(r) {
-      const d = r.data || {};
-      switch(r.type) {
-        case 'breast':   return `母乳 · ${d.side==='left'?'左侧':d.side==='right'?'右侧':'双侧'}`;
-        case 'bottle':   return `奶瓶 · ${d.content==='formula'?'配方奶':d.content==='breast_milk'?'母乳':'混合'}`;
-        case 'solid':    return `辅食 · ${d.food || ''}`;
-        case 'sleep':    return '睡眠';
-        case 'diaper':   return `尿布 · ${d.type==='wet'?'湿':d.type==='dirty'?'便便':'湿+便便'}`;
-        case 'growth':   return '成长记录';
-        case 'medicine': return `用药 · ${d.name || ''}`;
-        case 'note':     return '备注';
-        default:         return r.type;
+    // ── Display helpers ──
+    recIcon(type){return{breast:'🤱',bottle:'🍼',solid:'🥣',sleep:'😴',diaper:'💧',growth:'📏',medicine:'💊',note:'📝'}[type]||'📌';},
+    recTitle(r){
+      const d=r.data||{};
+      switch(r.type){
+        case 'breast': return this.t('t_breast')+' · '+(d.side==='left'?this.t('sLeft'):d.side==='right'?this.t('sRight'):this.t('sBoth'));
+        case 'bottle': return this.t('t_bottle')+' · '+(d.content==='formula'?this.t('cFormula'):d.content==='breast_milk'?this.t('cBreastMilk'):this.t('cMix'));
+        case 'solid':  return this.t('t_solid')+' · '+(d.food||'');
+        case 'sleep': {
+          const st=d.sleep_type;
+          const label=st==='soothing'?this.t('sSoothing'):st==='deep'?this.t('sDeep'):st==='transfer'?this.t('sTransfer'):this.t('t_sleep');
+          return '😴 '+label;
+        }
+        case 'diaper': return this.t('t_diaper')+' · '+(d.type==='wet'?this.t('dWet'):d.type==='dirty'?this.t('dDirty'):this.t('dBoth'));
+        case 'growth': return this.t('t_growth');
+        case 'medicine': {
+          const mt=d.med_type;
+          if(mt==='temperature') return '🌡️ '+(d.temp?d.temp+'°C':'');
+          if(mt==='vaccine') return '💉 '+(d.name||'');
+          return '💊 '+(d.name||'');
+        }
+        case 'note': return this.t('t_note');
+        default: return r.type;
       }
     },
-
-    recDetail(r) {
-      const d = r.data || {};
-      const parts = [];
-      switch(r.type) {
-        case 'breast':
-        case 'sleep':    if (d.duration > 0) parts.push(this.fmtDur(d.duration)); break;
-        case 'bottle':   if (d.amount) parts.push(`${d.amount} ml`); if (d.duration > 0) parts.push(this.fmtDur(d.duration)); break;
-        case 'solid':    if (d.amount) parts.push(d.amount); break;
-        case 'diaper':   if (d.color) parts.push(d.color); break;
-        case 'growth':
-          if (d.weight) parts.push(`${d.weight} kg`);
-          if (d.height) parts.push(`${d.height} cm`);
-          if (d.head)   parts.push(`头围 ${d.head} cm`);
-          break;
-        case 'medicine': if (d.dosage) parts.push(d.dosage); break;
-        case 'note':     parts.push((d.text||'').substring(0,40) + ((d.text||'').length > 40 ? '…' : '')); break;
+    recDetail(r){
+      const d=r.data||{},parts=[];
+      switch(r.type){
+        case 'breast': case 'sleep': if(d.duration>0)parts.push(this.fmtDur(d.duration)); break;
+        case 'bottle': if(d.amount)parts.push(d.amount+' ml'); if(d.duration>0)parts.push(this.fmtDur(d.duration)); break;
+        case 'solid': if(d.amount)parts.push(d.amount); break;
+        case 'diaper': if(d.color)parts.push(d.color); break;
+        case 'growth': if(d.weight)parts.push(d.weight+' kg'); if(d.height)parts.push(d.height+' cm'); if(d.head)parts.push(this.t('gHead')+' '+d.head+' cm'); break;
+        case 'medicine': if(d.dosage)parts.push(d.dosage); break;
+        case 'note': parts.push((d.text||'').substring(0,40)+((d.text||'').length>40?'…':'')); break;
       }
-      if (r.note) parts.push(r.note);
+      if(r.note)parts.push(r.note);
       return parts.join(' · ');
     },
 
-    fmtTime(iso) {
-      const d = new Date(iso);
-      return d.toLocaleTimeString('zh-CN', { hour:'2-digit', minute:'2-digit', hour12:false });
+    fmtTime(iso){ const d=new Date(iso); return d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false}); },
+    fmtDateLabel(ds){
+      const t=new Date().toISOString().split('T')[0];
+      const y=new Date(Date.now()-86400000).toISOString().split('T')[0];
+      if(ds===t)return this.t('today')||'Today';
+      if(ds===y)return this.t('yesterday')||'Yesterday';
+      return ds.replace(/-/g,'/');
     },
-
-    fmtDateLabel(dateStr) {
-      const t = new Date().toISOString().split('T')[0];
-      const y = new Date(Date.now()-86400000).toISOString().split('T')[0];
-      if (dateStr === t) return '今天';
-      if (dateStr === y) return '昨天';
-      return dateStr.replace(/-/g, '/');
+    fmtStatsDate(ds){
+      const t=this.todayStr;
+      const y=new Date(Date.now()-86400000).toISOString().split('T')[0];
+      if(ds===t)return this.lang==='zh'?'今天':this.lang==='fr'?"Aujourd'hui":'Today';
+      if(ds===y)return this.lang==='zh'?'昨天':this.lang==='fr'?'Hier':'Yesterday';
+      const d=new Date(ds);
+      if(this.lang==='zh')return `${d.getMonth()+1}月${d.getDate()}日`;
+      return d.toLocaleDateString(this.lang==='fr'?'fr-FR':'en-GB',{month:'short',day:'numeric'});
     },
-
-    fmtStatsDate(dateStr) {
-      const t = new Date().toISOString().split('T')[0];
-      const y = new Date(Date.now()-86400000).toISOString().split('T')[0];
-      if (dateStr === t) return '今天';
-      if (dateStr === y) return '昨天';
-      const d = new Date(dateStr);
-      return `${d.getMonth()+1}月${d.getDate()}日`;
+    fmtDur(mins){
+      if(!mins)return'';
+      const h=Math.floor(mins/60),m=mins%60;
+      if(this.lang==='zh'){if(h===0)return`${m}分钟`;if(m===0)return`${h}小时`;return`${h}小时${m}分钟`;}
+      if(this.lang==='fr'){if(h===0)return`${m} min`;if(m===0)return`${h} h`;return`${h} h ${m} min`;}
+      if(h===0)return`${m} min`;if(m===0)return`${h} hr`;return`${h}h ${m}m`;
     },
-
-    fmtDur(mins) {
-      if (!mins) return '';
-      const h = Math.floor(mins/60), m = mins%60;
-      if (h === 0) return `${m} 分钟`;
-      if (m === 0) return `${h} 小时`;
-      return `${h} 小时 ${m} 分钟`;
+    fmtSecs(s){ const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=Math.floor(s%60);if(h>0)return`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;return`${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`; },
+    shortDate(ds){
+      const d=new Date(ds+'T12:00:00');
+      if(this.lang==='zh') return `${d.getMonth()+1}/${d.getDate()}`;
+      return d.toLocaleDateString(this.lang==='fr'?'fr-FR':'en-GB',{month:'numeric',day:'numeric'});
     },
+    localDate(d){ const dt=typeof d==='string'?new Date(d):d; return`${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`; },
+    timeToY(iso){ const d=new Date(iso),h=d.getHours()+d.getMinutes()/60; return this.MT+h*this.HH; },
 
-    fmtSecs(s) {
-      const h = Math.floor(s/3600), m = Math.floor((s%3600)/60), sec = Math.floor(s%60);
-      if (h > 0) return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
-      return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
-    },
-
-    showToast(msg) {
-      clearTimeout(this.toastTimer);
-      this.toast = msg;
-      this.toastTimer = setTimeout(() => this.toast = '', 2800);
-    },
-
-    async api(method, url, body) {
-      const opts = { method, headers: { 'Content-Type':'application/json' } };
-      if (body) opts.body = JSON.stringify(body);
-      const r = await fetch(url, opts);
-      const data = await r.json();
-      if (!r.ok) throw new Error(data.error || '网络错误');
+    showToast(msg){ clearTimeout(this.toastTimer);this.toast=msg;this.toastTimer=setTimeout(()=>this.toast='',2800); },
+    async api(method,url,body){
+      const opts={method,headers:{'Content-Type':'application/json'}};
+      if(body)opts.body=JSON.stringify(body);
+      const r=await fetch(url,opts);
+      const data=await r.json();
+      if(!r.ok)throw new Error(data.error||'Network error');
       return data;
     },
   },
 
-  async mounted() {
-    if (this.session.babyId) await this.init();
-  },
-
-  beforeUnmount() { this.stopIntervals(); },
+  async mounted(){ if(this.session.babyId)await this.init(); },
+  beforeUnmount(){ this.stopIntervals(); },
 }).mount('#app');
 </script>
 </body>
